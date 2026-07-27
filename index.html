@@ -2302,8 +2302,9 @@ function lienAvecMoi(n){
   var ci=Math.min(jm,jn), diff=Math.abs(jm-jn);
   if(jn<jm) /* il est plus proche de l'ancêtre : cousin d'un de vos aïeux */
     return cousinIndef(n,ci)+' de votre '+nu(libAncetre(r.ca[ci],diff));
-  /* il descend d'un de vos cousins */
-  return nu(libDescendant(n,diff))+' de '+cousinDef(r.cb[ci],ci);
+  /* il descend d'un de vos cousins : l'article est ici nécessaire
+     (« le fils de votre cousin germain », « la petite-fille de votre cousine ») */
+  return libDescendant(n,diff)+' de '+cousinDef(r.cb[ci],ci);
 }
 var moiDlg=document.getElementById('moiDlg'), moiVoile=document.getElementById('moiVoile'),
     moiQ=document.getElementById('moiQ');
