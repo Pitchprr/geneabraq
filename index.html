@@ -748,8 +748,8 @@ var ROM=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
 var idx={}, ordre=[], nbU=0;
 
 function enfants(n){var r=[];(n.u||[]).forEach(function(u){(u.c||[]).forEach(function(c){r.push(c)})});(n.c||[]).forEach(function(c){r.push(c)});return r}
-/* les traits d'union comptent comme des espaces : \u00ab Paul Henri \u00bb retrouve \u00ab Paul-Henri \u00bb
-   (substitution de m\u00eame longueur, les positions de surlignage restent valides) */
+/* les traits d'union comptent comme des espaces : un pr\u00e9nom compos\u00e9 se retrouve
+   avec ou sans tiret (substitution de m\u00eame longueur : le surlignage reste align\u00e9) */
 function norm(s){return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[-\u2010\u2011\u2013]/g,' ')}
 /* les noms des parrains/marraines sont parfois accol\u00e9s ou juxtapos\u00e9s sans \u00ab et \u00bb dans la source */
 /* le sexe se déduit de l'accord de la notice (« né le… » / « née le… ») :
@@ -867,7 +867,7 @@ var COUPLES=[];
   ordre.forEach(function(n){var k=norm(n.n);(parNom[k]=parNom[k]||[]).push(n)});
   /* doublons : même personne présente dans plusieurs descendances.
      Fusion prudente : familles distinctes, années compatibles ET parents partagés
-     (départage les vrais homonymes comme les deux Alix de Braquilanges). */
+     (départage les vrais homonymes, deux personnes distinctes de même nom). */
   function nomsParents(n){
     var r=[];
     if(n.p){
@@ -957,8 +957,9 @@ function parentsDe(n){
   }
   return r;
 }
-/* patronyme complet par filiation : suffixe de mots commun avec le père ou la mère
-   (« Gonzague Bertin de La Hautière » + « Alain Bertin de La Hautière » → « Bertin de La Hautière ») */
+/* patronyme complet par filiation : suffixe de mots commun avec le père ou la mère.
+   Un enfant et son parent partagent « Nom de La Chose » → c'est le patronyme entier,
+   ce qui distingue un vrai nom composé d'une simple suite de prénoms. */
 function suffixeCommun(a,b){
   var i=a.length-1, j=b.length-1, k=0;
   while(i>=0&&j>=0&&norm(a[i])===norm(b[j])){i--;j--;k++}
@@ -979,8 +980,8 @@ ordre.forEach(function(n){
   });
   n.pat=best||patronyme(n.n);
 });
-/* noms d'usage : « Alix Poirier » retrouve Alix de Braquilanges (épouse de Jean Poirier).
-   La recherche accepte prénom + patronyme du conjoint ; le nom de naissance reste la référence. */
+/* noms d'usage : une femme mariée se retrouve aussi sous « prénom + patronyme du conjoint ».
+   La recherche accepte cette forme ; le nom de naissance reste la référence affichée. */
 ordre.forEach(function(n){
   if(!n.pat||n.n.length<=n.pat.length) return;
   if(norm(n.n).slice(-norm(n.pat).length)!==norm(n.pat)) return;
