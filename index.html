@@ -401,9 +401,40 @@ var idx={}, ordre=[], nbU=0;
 
 function enfants(n){var r=[];(n.u||[]).forEach(function(u){(u.c||[]).forEach(function(c){r.push(c)})});(n.c||[]).forEach(function(c){r.push(c)});return r}
 function norm(s){return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')}
+/* les noms des parrains/marraines sont parfois accol\u00e9s ou juxtapos\u00e9s sans \u00ab et \u00bb dans la source */
+function corrigerNoms(t){
+  return (t||'').replace(/((?:parrain|marraine)[^:)]*:\s*)([^)]*)/gi,function(_,tete,reste){
+    /* cas 1 : noms soud\u00e9s (\u00ab DelobelleAna\u00efs \u00bb) */
+    reste=reste.replace(/([a-z\u00e0-\u00f6\u00f8-\u00ff])(?=[A-Z\u00c0-\u00d6])/g,'$1 et ');
+    /* cas 2 : deux noms juxtapos\u00e9s avec une simple espace */
+    if(!/\bet\b/.test(reste)){
+      var toks=reste.trim().split(/\s+/);
+      var part=function(w){return /^(de|du|des|d'|le|la|van|von)$/i.test(w)};
+      var annee=function(w){return /^\d{4}([-\u2013]\d{4})?[.,]?$/.test(w)};
+      var maj=function(w){return /^[A-Z\u00c0-\u00d6]/.test(w)};
+      var cand=[];
+      for(var i=2;i<toks.length;i++){
+        if(!maj(toks[i])||part(toks[i])||part(toks[i-1])) continue;
+        var g=toks.slice(0,i).filter(function(w){return !part(w)&&!annee(w)}).length;
+        var d=toks.slice(i).filter(function(w){return !part(w)&&!annee(w)}).length;
+        if(g>=2&&d>=2) cand.push(i);
+      }
+      if(cand.length===1){
+        toks.splice(cand[0],0,'et');
+        reste=toks.join(' ')+(/\s$/.test(reste)?' ':'');
+      }
+    }
+    return tete+reste;
+  });
+}
 
 (function prep(n,parent){
   n.p=parent; idx[n.i]=n; ordre.push(n); nbU+=(n.u||[]).length;
+  if(n.d) n.d=corrigerNoms(n.d);
+  (n.u||[]).forEach(function(u){
+    if(u.d) u.d=corrigerNoms(u.d);
+    if(u.a) u.a=corrigerNoms(u.a);
+  });
   n.k=norm(n.n+' '+(n.d||'')+' '+(n.u||[]).map(function(u){return u.s+' '+u.d+' '+u.a}).join(' '));
   n.desc=0;
   enfants(n).forEach(function(c){prep(c,n)});
