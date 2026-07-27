@@ -2,8 +2,13 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="theme-color" content="#e9e2d1">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Braquilanges">
 <title>Descendants d'Edmond de Braquilanges</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,6 +49,20 @@ h1{font-family:var(--titre);font-weight:600;font-size:clamp(1.6rem,5vw,2.6rem);m
 .champ .loupe{position:absolute;left:9px;top:50%;transform:translateY(-50%);color:var(--estompe);font-size:.95rem}
 .champ .vider{position:absolute;right:4px;top:50%;transform:translateY(-50%);border:0;background:none;color:var(--estompe);
   font-size:1.1rem;cursor:pointer;padding:2px 6px;display:none}
+.sugg{position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:40;display:none;
+  background:var(--argent);border:1px solid var(--or-pale);border-radius:2px;
+  box-shadow:0 8px 22px rgba(25,23,16,.18);max-height:320px;overflow-y:auto}
+.sugg.on{display:block}
+.sugg button{display:block;width:100%;text-align:left;border:0;background:none;cursor:pointer;
+  font-family:var(--serif);font-size:.96rem;color:var(--sable);padding:8px 12px;
+  border-bottom:1px solid rgba(207,195,164,.45)}
+.sugg button:last-child{border-bottom:0}
+.sugg button:hover,.sugg button.actif{background:var(--velin-clair)}
+.sugg button.actif{box-shadow:inset 2px 0 0 var(--or)}
+.sugg b{font-weight:600;color:var(--gueules)}
+.sugg .svie{font-size:.8rem;color:var(--estompe);font-style:italic;margin-left:6px;white-space:nowrap}
+.sugg .sgen{float:right;font-size:.74rem;letter-spacing:.08em;color:var(--estompe);margin-top:2px}
+.sugg .aucun{padding:9px 12px;font-style:italic;color:var(--estompe);font-size:.9rem}
 button.b{font-family:var(--serif);font-size:.86rem;letter-spacing:.06em;text-transform:uppercase;padding:8px 11px;
   border:1px solid var(--rail);background:var(--velin-clair);color:var(--encre);border-radius:2px;cursor:pointer}
 button.b:hover{border-color:var(--or);color:var(--sable)}
@@ -103,6 +122,12 @@ li.n.cible>.rang{background:rgba(169,130,47,.22);box-shadow:inset 3px 0 0 var(--
 .bloc h3{font-family:var(--serif);font-size:.76rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gueules);
   margin:0 0 6px;font-weight:600;border-bottom:1px solid var(--rail);padding-bottom:3px}
 .fiche p{margin:.3em 0}
+.fiche .lr{display:flex;gap:10px;align-items:baseline;margin:.35em 0}
+.fiche .role{flex:0 0 96px;font-size:.66rem;letter-spacing:.11em;text-transform:uppercase;color:var(--estompe)}
+.fiche .qn{font-family:var(--titre);font-size:1.05rem;background:none;border:0;padding:0;cursor:pointer;color:var(--sable);text-align:left;line-height:1.25}
+.fiche .qn:hover{color:var(--gueules)}
+.fiche .pv{font-size:.78rem;color:var(--estompe);white-space:nowrap}
+.fiche .souscat{font-family:var(--titre);font-style:italic;color:var(--or);font-size:.98rem;margin:10px 0 3px}
 .fil{font-size:.9rem;color:var(--encre)}
 .fil button{font-family:var(--serif);font-size:.9rem;background:none;border:0;padding:0;cursor:pointer;color:var(--azur);text-decoration:underline;text-decoration-color:var(--or-pale);text-underline-offset:2px}
 .fil .sep{color:var(--or);margin:0 4px}
@@ -115,12 +140,88 @@ footer{border-top:1px solid var(--rail);margin-top:20px;padding:18px 16px 40px;t
   font-size:.8rem;color:var(--estompe);line-height:1.6}
 footer a{color:var(--encre)}
 .orn{color:var(--or);letter-spacing:.5em;margin-bottom:8px;font-size:.9rem}
-@media (max-width:640px){
-  body{font-size:16px}
-  ul.arbre ul{margin-left:8px;padding-left:11px}
-  .detail,.union{margin-left:26px}
-  .fiche{top:auto;left:0;right:0;bottom:0;width:auto;max-height:82vh;transform:translateY(102%);border-radius:6px 6px 0 0}
+/* ---------- mini-app mobile ---------- */
+.tabbar,.rechM{display:none}
+input[type=search]::-webkit-search-cancel-button,
+input[type=search]::-webkit-search-decoration{-webkit-appearance:none;appearance:none}
+@media (max-width:720px){
+  body{font-size:16px;-webkit-tap-highlight-color:transparent}
+  .bandeau{padding:20px 16px 14px}
+  .ecu{width:36px;height:43px;margin-bottom:8px}
+  h1{font-size:clamp(1.35rem,6vw,1.9rem)}
+  .sous{font-size:.95rem}
+  .chiffres{font-size:.7rem;margin-top:9px}
+  /* barre réduite aux filtres */
+  .barre{padding:8px 12px;gap:8px}
+  .champ,#vArbre,#vIndex{display:none}
+  select.b{flex:1 1 0;min-width:0;font-size:.82rem;padding:11px 8px;border-radius:10px}
+  .resultat{font-size:.85rem;margin:0}
+  .resultat:empty{display:none}
+  main{padding:14px 12px calc(88px + env(safe-area-inset-bottom))}
+  footer{padding-bottom:calc(88px + env(safe-area-inset-bottom))}
+  /* arbre : zones tactiles */
+  ul.arbre ul{margin-left:5px;padding-left:10px}
+  .rang{padding:6px 4px 6px 0;gap:8px}
+  .bascule{width:30px;height:28px;line-height:28px;font-size:.8rem}
+  .marque{margin-top:8px}
+  .nom{font-size:1.1rem}
+  .detail,.union{margin-left:35px}
   .liste{columns:1}
+  .ent{margin:0;padding:9px 2px;border-bottom:1px solid rgba(207,195,164,.4)}
+  /* fiche en feuille glissante */
+  .voile{z-index:64;touch-action:none}
+  .fiche{z-index:66;top:auto;left:0;right:0;bottom:0;width:auto;
+    max-height:86vh;max-height:86dvh;
+    border:0;border-top:1px solid var(--or-pale);border-radius:18px 18px 0 0;
+    transform:translateY(103%);transition:transform .34s cubic-bezier(.32,.72,0,1);
+    padding:8px 20px calc(28px + env(safe-area-inset-bottom));
+    overscroll-behavior:contain}
+  .fiche::before{content:"";display:block;width:42px;height:4px;border-radius:2px;
+    background:var(--rail);margin:4px auto 14px}
+  .fiche.glisse{transition:none}
+  .fermer{top:16px;right:14px;font-size:1.6rem;padding:4px 8px}
+  /* barre d'onglets */
+  .tabbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:60;
+    background:rgba(245,241,229,.95);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+    border-top:1px solid var(--rail);padding:5px 10px calc(7px + env(safe-area-inset-bottom))}
+  .tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+    border:0;background:none;font-family:var(--serif);font-size:.65rem;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--estompe);padding:7px 0 3px;cursor:pointer;
+    border-radius:12px;transition:color .15s}
+  .tabbar svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.5;
+    stroke-linecap:round;stroke-linejoin:round}
+  .tabbar button.actif{color:var(--gueules)}
+  .tabbar button:active{background:rgba(169,130,47,.14)}
+  /* recherche plein écran */
+  .rechM{display:flex;flex-direction:column;position:fixed;inset:0;z-index:80;background:var(--velin);
+    transform:translateY(103%);transition:transform .3s cubic-bezier(.32,.72,0,1);
+    padding-top:env(safe-area-inset-top)}
+  .rechM.on{transform:none}
+  .rechM-tete{display:flex;align-items:center;gap:4px;padding:10px 12px;
+    border-bottom:1px solid var(--rail);background:var(--velin-clair)}
+  .rechM-tete .retour{border:0;background:none;font-family:var(--titre);font-size:2rem;line-height:.9;
+    color:var(--encre);padding:0 10px 6px 4px;cursor:pointer}
+  .rechM-champ{position:relative;flex:1;min-width:0}
+  .rechM-champ input{width:100%;font-family:var(--serif);font-size:1.05rem;
+    padding:11px 38px 11px 14px;border:1px solid var(--rail);background:var(--argent);
+    color:var(--sable);border-radius:11px;outline:none}
+  .rechM-champ input:focus{border-color:var(--or);box-shadow:0 0 0 2px rgba(169,130,47,.22)}
+  .rechM-champ .qmvider{position:absolute;right:5px;top:50%;transform:translateY(-50%);
+    border:0;background:none;color:var(--estompe);font-size:1.35rem;padding:4px 9px;
+    cursor:pointer;display:none}
+  .rechM-corps{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+    padding:4px 0 46px}
+  .rechM-corps .compte{padding:12px 16px 5px;font-size:.72rem;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--estompe)}
+  .rechM-corps .conseil{padding:44px 28px;text-align:center;font-style:italic;
+    color:var(--estompe);line-height:1.6}
+  .rp{display:block;width:100%;text-align:left;border:0;background:none;cursor:pointer;
+    font-family:var(--serif);padding:12px 16px;border-bottom:1px solid rgba(207,195,164,.4)}
+  .rp:active{background:var(--velin-clair)}
+  .rp .rnom{font-family:var(--titre);font-size:1.12rem;color:var(--sable);display:block;line-height:1.25}
+  .rp .rnom b{font-weight:600;color:var(--gueules)}
+  .rp .rinfo{font-size:.8rem;color:var(--estompe);letter-spacing:.04em}
+  .rp.filtre .rnom{font-family:var(--serif);font-size:.95rem;color:var(--azur);font-style:italic}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 :focus-visible{outline:2px solid var(--or);outline-offset:2px}
@@ -222,8 +323,10 @@ I.focus();
 <nav class="barre">
   <div class="champ">
     <span class="loupe">⌕</span>
-    <input id="q" type="search" placeholder="Chercher un nom, un lieu, une année…" autocomplete="off" aria-label="Recherche">
+    <input id="q" type="search" placeholder="Chercher un nom, un lieu, une année…" autocomplete="off" aria-label="Recherche"
+      role="combobox" aria-expanded="false" aria-controls="sugg" aria-autocomplete="list">
     <button class="vider" id="vider" aria-label="Effacer">×</button>
+    <div class="sugg" id="sugg" role="listbox" aria-label="Suggestions"></div>
   </div>
   <button class="b" id="vArbre" aria-pressed="true">Arbre</button>
   <button class="b" id="vIndex" aria-pressed="false">Index</button>
@@ -251,6 +354,32 @@ I.focus();
   <button class="fermer" id="fermer" aria-label="Fermer">×</button>
   <div id="fcorps"></div>
 </aside>
+
+<div class="rechM" id="rechM" role="dialog" aria-modal="true" aria-label="Recherche">
+  <div class="rechM-tete">
+    <button class="retour" id="rRetour" type="button" aria-label="Fermer la recherche">‹</button>
+    <div class="rechM-champ">
+      <input id="qm" type="search" placeholder="Nom, lieu, année…" autocomplete="off" aria-label="Recherche">
+      <button class="qmvider" id="qmVider" type="button" aria-label="Effacer">×</button>
+    </div>
+  </div>
+  <div class="rechM-corps" id="rCorps"></div>
+</div>
+
+<nav class="tabbar" aria-label="Navigation principale">
+  <button type="button" id="tabArbre" class="actif">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="5" rx="1"/><rect x="3" y="16" width="6" height="5" rx="1"/><rect x="15" y="16" width="6" height="5" rx="1"/><path d="M12 8v5M6 16v-3h12v3"/></svg>
+    Arbre
+  </button>
+  <button type="button" id="tabIndex">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h12M9 12h12M9 18h12"/><path d="M4 6h.01M4 12h.01M4 18h.01" stroke-width="2.4"/></svg>
+    Index
+  </button>
+  <button type="button" id="tabChercher">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg>
+    Chercher
+  </button>
+</nav>
 
 <footer>
   <div class="orn">❧</div>
@@ -388,11 +517,74 @@ function chercher(){
   res.textContent = trouves ? trouves+' personne'+(trouves>1?'s':'')+' trouvée'+(trouves>1?'s':'') : 'Aucun résultat';
   if(trouves){
     var prem=document.querySelector('li.n.cible');
-    if(prem) prem.scrollIntoView({block:'center',behavior:'smooth'});
+    if(prem) (prem.querySelector('.rang')||prem).scrollIntoView({block:'center',behavior:'smooth'});
   }
 }
-q.addEventListener('input',function(){clearTimeout(q._t);q._t=setTimeout(chercher,180)});
-vd.onclick=function(){q.value='';chercher();q.focus()};
+/* ---------- suggestions ---------- */
+var sug=document.getElementById('sugg'), sugListe=[], sugAct=-1;
+function surligner(nom,s){
+  var pos=norm(nom).indexOf(s);
+  if(pos<0) return esc(nom);
+  return esc(nom.slice(0,pos))+'<b>'+esc(nom.slice(pos,pos+s.length))+'</b>'+esc(nom.slice(pos+s.length));
+}
+function fermerSugg(){
+  sug.classList.remove('on'); sug.innerHTML=''; sugListe=[]; sugAct=-1;
+  q.setAttribute('aria-expanded','false');
+}
+function calculerSuggestions(s){
+  var debut=[],dedans=[],autres=[];
+  ordre.forEach(function(n){
+    var nn=norm(n.n), p=nn.indexOf(s);
+    if(p===0||(p>0&&nn.charAt(p-1)===' ')) debut.push(n);
+    else if(p>-1) dedans.push(n);
+    else if(n.k.indexOf(s)>-1) autres.push(n);
+  });
+  return debut.concat(dedans,autres);
+}
+function suggerer(){
+  var s=norm(q.value.trim());
+  if(s.length<2){fermerSugg();return}
+  sugListe=calculerSuggestions(s).slice(0,12);
+  sugAct=-1;
+  if(!sugListe.length){
+    sug.innerHTML='<div class="aucun">Aucune personne trouvée</div>';
+    sug.classList.add('on'); q.setAttribute('aria-expanded','true');
+    return;
+  }
+  sug.innerHTML='';
+  sugListe.forEach(function(n,i){
+    var b=document.createElement('button'); b.type='button'; b.setAttribute('role','option');
+    var v=vie(n);
+    b.innerHTML='<span class="sgen">gén. '+ROM[n.g]+'</span>'+surligner(n.n,s)+(v?'<span class="svie">'+esc(v)+'</span>':'');
+    b.onmousedown=function(e){e.preventDefault()};
+    b.onclick=function(){choisirSugg(n)};
+    sug.appendChild(b);
+  });
+  sug.classList.add('on'); q.setAttribute('aria-expanded','true');
+}
+function choisirSugg(n){
+  fermerSugg();
+  q.value=n.n; chercher();
+  allerA(n);
+}
+function bougerSugg(delta){
+  if(!sugListe.length) return;
+  sugAct=(sugAct+delta+sugListe.length)%sugListe.length;
+  var bs=sug.querySelectorAll('button');
+  bs.forEach(function(b,i){b.classList.toggle('actif',i===sugAct)});
+  bs[sugAct].scrollIntoView({block:'nearest'});
+}
+q.addEventListener('keydown',function(e){
+  if(e.key==='ArrowDown'){e.preventDefault();if(!sug.classList.contains('on'))suggerer();else bougerSugg(1)}
+  else if(e.key==='ArrowUp'){e.preventDefault();bougerSugg(-1)}
+  else if(e.key==='Enter'&&sugAct>-1&&sugListe[sugAct]){e.preventDefault();choisirSugg(sugListe[sugAct])}
+  else if(e.key==='Escape'){fermerSugg()}
+});
+document.addEventListener('mousedown',function(e){
+  if(!e.target.closest||!e.target.closest('.champ')) fermerSugg();
+});
+q.addEventListener('input',function(){clearTimeout(q._t);q._t=setTimeout(function(){chercher();suggerer()},180)});
+vd.onclick=function(){q.value='';fermerSugg();chercher();q.focus()};
 
 /* ---------- index ---------- */
 var vueIndex=document.getElementById('index'), bA=document.getElementById('vArbre'), bI=document.getElementById('vIndex');
@@ -438,6 +630,8 @@ function vue(index){
   arbre.style.display=index?'none':'block';
   bA.setAttribute('aria-pressed',String(!index));
   bI.setAttribute('aria-pressed',String(index));
+  var tA=document.getElementById('tabArbre'),tI=document.getElementById('tabIndex');
+  if(tA){tA.classList.toggle('actif',!index);tI.classList.toggle('actif',index)}
 }
 bA.onclick=function(){vue(false)};
 bI.onclick=function(){vue(true)};
@@ -448,9 +642,14 @@ function allerA(n){
   vue(false);
   var p=n.p; while(p){p.el.classList.remove('ferme');p.el.classList.remove('masque');p=p.p}
   n.el.classList.remove('masque');
+  n.el.classList.remove('ferme');
+  /* montrer la fratrie autour de la personne */
+  if(n.p) enfants(n.p).forEach(function(f){ if(f.el) f.el.classList.remove('masque') });
+  /* déplier ses enfants sous elle */
+  enfants(n).forEach(function(c){ if(c.el) c.el.classList.remove('masque') });
   ordre.forEach(function(m){if(m.el)m.el.classList.remove('cible')});
   n.el.classList.add('cible');
-  n.el.scrollIntoView({block:'center',behavior:'smooth'});
+  (n.el.querySelector('.rang')||n.el).scrollIntoView({block:'center',behavior:'smooth'});
   fiche(n);
 }
 function lignee(n){
@@ -458,11 +657,76 @@ function lignee(n){
   while(p){l.unshift(p);p=p.p}
   return l;
 }
+function unionDe(parent,enfant){
+  var r=null;
+  ((parent&&parent.u)||[]).forEach(function(u){if((u.c||[]).indexOf(enfant)>-1)r=u});
+  return r;
+}
+function persBtn(p){
+  return '<button type="button" class="qn" data-go="'+p.i+'">'+esc(p.n)+'</button>'+
+    (vie(p)?' <span class="pv">'+vie(p)+'</span>':'');
+}
+function ligneRole(role,contenu){
+  return '<p class="lr"><span class="role">'+esc(role)+'</span><span>'+contenu+'</span></p>';
+}
+function fratrie(n){
+  if(!n.p) return [];
+  var un=unionDe(n.p,n), r=[];
+  (n.p.u||[]).forEach(function(u){
+    (u.c||[]).forEach(function(c){ if(c!==n) r.push({p:c,demi:!!un&&u!==un}) });
+  });
+  (n.p.c||[]).forEach(function(c){ if(c!==n) r.push({p:c,demi:false}) });
+  return r;
+}
 function fiche(n){
   var h='';
   h+='<h2 id="fnom">'+esc(n.n)+'</h2>';
   h+='<div class="rang-gen">'+ (n.s==='M'?'▲ ':n.s==='F'?'◆ ':'● ') +'Génération '+ROM[n.g]+(vie(n)?' &nbsp;·&nbsp; '+vie(n):'')+'</div>';
   if(n.d) h+='<div class="bloc"><h3>Notice</h3><p>'+esc(n.d)+'.</p></div>';
+
+  /* parents et grands-parents */
+  h+='<div class="bloc"><h3>Parents et grands-parents</h3>';
+  if(n.p){
+    var up=unionDe(n.p,n), autre=(up&&up.s)?esc(up.s):null;
+    if(n.p.s==='F'){
+      h+=ligneRole('Mère',persBtn(n.p));
+      h+=ligneRole('Père',autre||'<i>non renseigné</i>');
+    }else{
+      h+=ligneRole('Père',persBtn(n.p));
+      h+=ligneRole('Mère',autre||'<i>non renseignée</i>');
+    }
+    if(n.p.p){
+      var ug=unionDe(n.p.p,n.p), autg=(ug&&ug.s)?esc(ug.s):null;
+      h+='<p class="souscat">Grands-parents '+(n.p.s==='F'?'maternels':'paternels')+'</p>';
+      if(n.p.p.s==='F'){
+        h+=ligneRole('Grand-mère',persBtn(n.p.p));
+        if(autg) h+=ligneRole('Grand-père',autg);
+      }else{
+        h+=ligneRole('Grand-père',persBtn(n.p.p));
+        if(autg) h+=ligneRole('Grand-mère',autg);
+      }
+    }else{
+      h+='<p class="souscat">Grands-parents</p><p><i>Non renseignés dans cette base.</i></p>';
+    }
+  }else{
+    h+='<p><i>Souche de l\'arbre — ascendance non renseignée dans cette base.</i></p>';
+  }
+  h+='</div>';
+
+  /* frères et sœurs */
+  if(n.p){
+    var fr=fratrie(n);
+    h+='<div class="bloc"><h3>Frères et sœurs</h3>';
+    if(!fr.length) h+='<p><i>Aucun frère ou sœur recensé.</i></p>';
+    else fr.forEach(function(f){
+      var role=f.p.s==='M'?(f.demi?'Demi-frère':'Frère')
+              :f.p.s==='F'?(f.demi?'Demi-sœur':'Sœur')
+              :(f.demi?'Demi':'Frère ou sœur');
+      h+=ligneRole(role,persBtn(f.p));
+    });
+    h+='</div>';
+  }
+
   if((n.u||[]).length){
     h+='<div class="bloc"><h3>'+((n.u.length>1)?'Unions':'Union')+'</h3>';
     n.u.forEach(function(u){
@@ -480,7 +744,25 @@ function fiche(n){
     k.forEach(function(c){h+='<li><button type="button" data-go="'+c.i+'">'+esc(c.n)+'</button>'+(vie(c)?' <span class="gen" style="font-size:.78rem;color:var(--estompe)">'+vie(c)+'</span>':'')+'</li>'});
     h+='</ul></div>';
   }
-  if(n.desc) h+='<div class="bloc"><h3>Postérité</h3><p>'+n.desc+' descendants recensés.</p></div>';
+
+  /* petits-enfants, regroupés par enfant */
+  var nbPE=0;
+  k.forEach(function(c){nbPE+=enfants(c).length});
+  if(nbPE){
+    h+='<div class="bloc"><h3>'+nbPE+' petit'+(nbPE>1?'s':'')+'-enfant'+(nbPE>1?'s':'')+'</h3>';
+    k.forEach(function(c){
+      var gs=enfants(c);
+      if(!gs.length) return;
+      h+='<p class="souscat">Par '+esc(c.n.split(' ')[0])+'</p><ul class="enfants">';
+      gs.forEach(function(g){
+        h+='<li><button type="button" data-go="'+g.i+'">'+esc(g.n)+'</button>'+
+           (vie(g)?' <span class="gen" style="font-size:.78rem;color:var(--estompe)">'+vie(g)+'</span>':'')+'</li>';
+      });
+      h+='</ul>';
+    });
+    h+='</div>';
+  }
+  if(n.desc>k.length) h+='<div class="bloc"><h3>Postérité</h3><p>'+n.desc+' descendants recensés au total.</p></div>';
   var l=lignee(n);
   if(l.length>1){
     h+='<div class="bloc"><h3>Filiation</h3><p class="fil">';
@@ -491,12 +773,138 @@ function fiche(n){
   corps.querySelectorAll('[data-go]').forEach(function(b){
     b.onclick=function(){allerA(idx[b.dataset.go])};
   });
+  var etaitOuverte=fic.classList.contains('on');
+  fic.scrollTop=0;
   fic.classList.add('on'); voile.classList.add('on');
+  if(!etaitOuverte) pousser('fiche');
 }
-function fermer(){fic.classList.remove('on');voile.classList.remove('on')}
-document.getElementById('fermer').onclick=fermer;
-voile.onclick=fermer;
-document.addEventListener('keydown',function(e){if(e.key==='Escape')fermer()});
+function fermer(depuisHist){
+  fic.classList.remove('on');voile.classList.remove('on');
+  depiler('fiche',depuisHist===true);
+}
+document.getElementById('fermer').onclick=function(){fermer()};
+voile.onclick=function(){fermer()};
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Escape')return;
+  if(rechM.classList.contains('on')) fermerRech(); else fermer();
+});
+
+/* ---------- mini-app mobile ---------- */
+var mobQ=window.matchMedia('(max-width:720px)');
+var rechM=document.getElementById('rechM'), qm=document.getElementById('qm'),
+    rCorps=document.getElementById('rCorps'), qmV=document.getElementById('qmVider');
+
+/* bouton retour du téléphone : ferme recherche/fiche au lieu de quitter */
+var pile=[];
+function pousser(tag){
+  if(!mobQ.matches) return;
+  pile.push(tag);
+  try{history.pushState({g:tag},'')}catch(e){}
+}
+function depiler(tag,depuisHist){
+  var i=pile.lastIndexOf(tag);
+  if(i<0) return;
+  pile.splice(i,1);
+  if(!depuisHist){try{history.back()}catch(e){}}
+}
+window.addEventListener('popstate',function(){
+  if(rechM.classList.contains('on')) fermerRech(true);
+  else if(fic.classList.contains('on')) fermer(true);
+});
+
+function verrou(on){document.documentElement.style.overflow=(on&&mobQ.matches)?'hidden':''}
+
+/* recherche plein écran */
+function ouvrirRech(){
+  if(rechM.classList.contains('on')) return;
+  rechM.classList.add('on'); verrou(true); pousser('rech');
+  listerRech();
+  setTimeout(function(){qm.focus()},310);
+}
+function fermerRech(depuisHist){
+  if(!rechM.classList.contains('on')) return;
+  rechM.classList.remove('on'); qm.blur(); verrou(false);
+  depiler('rech',depuisHist===true);
+}
+function listerRech(){
+  var brut=qm.value.trim(), s=norm(brut);
+  qmV.style.display=qm.value?'block':'none';
+  if(s.length<2){
+    rCorps.innerHTML='<div class="conseil">Tapez au moins deux lettres —<br>un prénom, un nom, un lieu ou une année.</div>';
+    return;
+  }
+  var l=calculerSuggestions(s);
+  if(!l.length){
+    rCorps.innerHTML='<div class="conseil">Aucun résultat pour «&nbsp;'+esc(brut)+'&nbsp;».</div>';
+    return;
+  }
+  rCorps.innerHTML='';
+  var c=document.createElement('div'); c.className='compte';
+  c.textContent=l.length+' personne'+(l.length>1?'s':'');
+  rCorps.appendChild(c);
+  var f=document.createElement('button'); f.type='button'; f.className='rp filtre';
+  f.innerHTML='<span class="rnom">Filtrer l\'arbre avec «&nbsp;'+esc(brut)+'&nbsp;» ›</span>';
+  f.onclick=function(){
+    q.value=brut; fermerRech(); vue(false); chercher();
+  };
+  rCorps.appendChild(f);
+  l.slice(0,60).forEach(function(n){
+    var b=document.createElement('button'); b.type='button'; b.className='rp';
+    var v=vie(n);
+    b.innerHTML='<span class="rnom">'+surligner(n.n,s)+'</span>'+
+      '<span class="rinfo">'+(v?esc(v)+' · ':'')+'gén. '+ROM[n.g]+'</span>';
+    b.onclick=function(){
+      fermerRech();
+      q.value=''; chercher();
+      vue(false);
+      allerA(n);
+    };
+    rCorps.appendChild(b);
+  });
+}
+qm.addEventListener('input',function(){clearTimeout(qm._t);qm._t=setTimeout(listerRech,140)});
+qm.addEventListener('keydown',function(e){
+  if(e.key==='Enter'){
+    var prem=rCorps.querySelector('.rp:not(.filtre)');
+    if(prem){e.preventDefault();prem.click()}
+  }
+});
+qmV.onclick=function(){qm.value='';q.value='';chercher();listerRech();qm.focus()};
+document.getElementById('rRetour').onclick=function(){fermerRech()};
+
+/* onglets */
+document.getElementById('tabArbre').onclick=function(){
+  fermerRech(); vue(false); window.scrollTo({top:0,behavior:'smooth'});
+};
+document.getElementById('tabIndex').onclick=function(){
+  fermerRech(); vue(true); window.scrollTo({top:0,behavior:'smooth'});
+};
+document.getElementById('tabChercher').onclick=function(){ouvrirRech()};
+
+/* fiche : glisser vers le bas pour fermer */
+(function(){
+  var y0=null, dy=0;
+  fic.addEventListener('touchstart',function(e){
+    if(!mobQ.matches||fic.scrollTop>0){y0=null;return}
+    y0=e.touches[0].clientY; dy=0;
+  },{passive:true});
+  fic.addEventListener('touchmove',function(e){
+    if(y0===null) return;
+    dy=e.touches[0].clientY-y0;
+    if(dy>0){
+      fic.classList.add('glisse');
+      fic.style.transform='translateY('+dy+'px)';
+      e.preventDefault();
+    }
+  },{passive:false});
+  fic.addEventListener('touchend',function(){
+    if(y0===null) return;
+    fic.classList.remove('glisse');
+    fic.style.transform='';
+    if(dy>90) fermer();
+    y0=null; dy=0;
+  });
+})();
 };
 </script>
 </body>
