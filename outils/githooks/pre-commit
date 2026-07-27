@@ -1,0 +1,34 @@
+#!/bin/sh
+# Refuse tout commit contenant les données généalogiques EN CLAIR.
+# Installé via : git config core.hooksPath outils/githooks
+
+if git diff --cached --name-only | grep -q '^index\.html$'; then
+  bloc=$(git show :index.html | sed -n 's/.*<script id="data" type="application\/octet-stream">\(.*\)<\/script>.*/\1/p' | head -c 200)
+  case "$bloc" in
+    *'"clair"'*)
+      echo ""
+      echo "  ✖ COMMIT REFUSÉ — index.html contient les données EN CLAIR."
+      echo ""
+      echo "  Ces données concernent des personnes vivantes : les inscrire dans"
+      echo "  l'historique git serait irréversible."
+      echo ""
+      echo "  Chiffrez d'abord :   node outils/maj-donnees.js --chiffrer"
+      echo "  puis :               git add index.html && git commit …"
+      echo ""
+      echo "  (contournement volontaire : git commit --no-verify)"
+      echo ""
+      exit 1
+      ;;
+  esac
+fi
+
+# Interdit aussi de versionner les données sources en clair
+if git diff --cached --name-only | grep -q '^donnees-privees/'; then
+  echo ""
+  echo "  ✖ COMMIT REFUSÉ — donnees-privees/ contient les arbres en clair."
+  echo "  Ce dossier doit rester local (il est dans .gitignore)."
+  echo ""
+  exit 1
+fi
+
+exit 0

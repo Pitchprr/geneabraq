@@ -1,14 +1,18 @@
 #!/usr/bin/env node
 /*
- * Outil de mise à jour des données chiffrées de index.html.
- * La phrase de passe est demandée au clavier (saisie masquée) et ne quitte jamais cette machine.
+ * Outil de mise à jour des données de index.html (chiffrées ou en clair).
  *
  * Usage :
- *   node outils/maj-donnees.js --exporter donnees.json     Déchiffre et écrit le JSON en clair (à supprimer après usage !)
+ *   node outils/maj-donnees.js --exporter donnees.json     Écrit le JSON en clair (à supprimer après usage !)
  *   node outils/maj-donnees.js --ajouter famille.json      Ajoute une nouvelle descendance (racine ou {familles:[...]})
  *   node outils/maj-donnees.js --importer donnees.json     Remplace toutes les données par ce fichier
+ *   node outils/maj-donnees.js --dechiffrer                Mode développement : stocke les données EN CLAIR (plus de mot de passe)
+ *   node outils/maj-donnees.js --chiffrer                  Rechiffre les données (fin du mode développement)
+ *   node outils/maj-donnees.js --restaurer                 Annule la dernière modification (index.html.avant)
  *   Options : --fichier <chemin>  index.html à traiter (défaut : celui du projet)
- * La phrase peut aussi être fournie via la variable d'environnement BRAQ_PHRASE (pour les scripts).
+ *
+ * La phrase de passe n'est demandée que si nécessaire (données chiffrées, ou --chiffrer).
+ * Elle peut aussi être fournie via la variable d'environnement BRAQ_PHRASE (pour les scripts).
  */
 'use strict';
 const fs = require('fs');
@@ -21,20 +25,69 @@ function lireArgs() {
     if (a[i] === '--exporter') o.exporter = a[++i];
     else if (a[i] === '--ajouter') o.ajouter = a[++i];
     else if (a[i] === '--importer') o.importer = a[++i];
+    else if (a[i] === '--dechiffrer') o.dechiffrer = true;
+    else if (a[i] === '--chiffrer') o.chiffrer = true;
+    else if (a[i] === '--restaurer') o.restaurer = true;
     else if (a[i] === '--fichier') o.fichier = a[++i];
     else { console.error('Argument inconnu :', a[i]); process.exit(1); }
   }
   return o;
 }
 
-function demanderPhrase() {
+/* saisie masquée : lecture directe des touches, une étoile par caractère réellement tapé */
+function demanderUneFois(invite) {
   return new Promise(res => {
-    if (process.env.BRAQ_PHRASE) return res(process.env.BRAQ_PHRASE);
-    const rl = require('readline').createInterface({ input: process.stdin, output: process.stdout });
-    process.stdout.write('Phrase de passe : ');
-    rl._writeToOutput = function () {}; // saisie masquée
-    rl.question('', r => { rl.close(); process.stdout.write('\n'); res(r); });
+    const entree = process.stdin;
+    if (!entree.isTTY) {   /* entrée redirigée (script) : lecture simple */
+      const rl = require('readline').createInterface({ input: entree, output: process.stdout });
+      process.stdout.write(invite);
+      rl.question('', r => { rl.close(); res(r); });
+      return;
+    }
+    process.stdout.write(invite);
+    const etaitBrut = entree.isRaw;
+    entree.setRawMode(true);
+    entree.resume();
+    entree.setEncoding('utf8');
+    let saisie = '';
+    const surTouche = t => {
+      for (const c of t) {
+        if (c === '\r' || c === '\n') {              /* validation */
+          entree.removeListener('data', surTouche);
+          entree.setRawMode(etaitBrut || false);
+          entree.pause();
+          process.stdout.write('\n');
+          return res(saisie);
+        }
+        if (c === '\u0003') {                         /* Ctrl+C */
+          entree.setRawMode(etaitBrut || false);
+          process.stdout.write('\n');
+          process.exit(130);
+        }
+        if (c === '\u007f' || c === '\b') {           /* effacement */
+          if (saisie.length) { saisie = saisie.slice(0, -1); process.stdout.write('\b \b'); }
+          continue;
+        }
+        if (c < ' ') continue;                        /* touches de contrôle ignorées */
+        saisie += c;
+        process.stdout.write('*');
+      }
+    };
+    entree.on('data', surTouche);
   });
+}
+async function demanderPhrase(confirmer) {
+  if (process.env.BRAQ_PHRASE) return process.env.BRAQ_PHRASE;
+  for (let essai = 1; essai <= 3; essai++) {
+    const p1 = await demanderUneFois('Phrase de passe : ');
+    if (!p1) { console.error('  Phrase vide — recommencez.\n'); continue; }
+    if (!confirmer) return p1;
+    const p2 = await demanderUneFois('Confirmez la phrase : ');
+    if (p1 === p2) return p1;
+    console.error('  Les deux saisies diffèrent'
+      + (essai < 3 ? ' — recommencez.\n' : ' — abandon après 3 tentatives.'));
+  }
+  process.exit(1);
 }
 
 const b64 = buf => Buffer.from(buf).toString('base64');
@@ -47,23 +100,9 @@ async function clef(phrase, sel, iterations, usages) {
 }
 
 function extraireBloc(html) {
-  const m = html.match(/(<script id="data" type="application\/octet-stream">)([\s\S]*?)(<\/script>)/);
+  const m = html.match(/<script id="data" type="application\/octet-stream">([\s\S]*?)<\/script>/);
   if (!m) { console.error('Bloc de données introuvable dans index.html'); process.exit(1); }
-  return { avantApres: [m[1], m[3]], brut: m[2], tout: m[0] };
-}
-
-async function dechiffrer(html, phrase) {
-  const bloc = extraireBloc(html);
-  const D = JSON.parse(bloc.brut);
-  const k = await clef(phrase, deb64(D.s), D.i, ['decrypt']);
-  let clair;
-  try {
-    clair = await wc.subtle.decrypt({ name: 'AES-GCM', iv: deb64(D.v) }, k, deb64(D.c));
-  } catch (e) {
-    console.error('Phrase de passe incorrecte (ou données corrompues).');
-    process.exit(1);
-  }
-  return { D, donnees: JSON.parse(Buffer.from(clair).toString('utf8')) };
+  return m[1];
 }
 
 async function chiffrer(objet, phrase, iterations) {
@@ -100,13 +139,40 @@ function compter(r) { let c = 0; parcourir(r, () => c++); return c; }
 (async () => {
   const args = lireArgs();
   const fichier = args.fichier || path.join(__dirname, '..', 'index.html');
-  if (!args.exporter && !args.ajouter && !args.importer) {
-    console.log('Rien à faire. Options : --exporter <f> | --ajouter <f> | --importer <f> [--fichier <index.html>]');
+  const sauvegarde = fichier + '.avant';
+
+  if (args.restaurer) {
+    if (!fs.existsSync(sauvegarde)) { console.error('Aucune sauvegarde trouvée (' + sauvegarde + ').'); process.exit(1); }
+    fs.copyFileSync(sauvegarde, fichier);
+    console.log('Restauré : ' + fichier + ' est revenu à l\'état d\'avant la dernière modification.');
     process.exit(0);
   }
+  if (!args.exporter && !args.ajouter && !args.importer && !args.dechiffrer && !args.chiffrer) {
+    console.log('Rien à faire. Options : --exporter <f> | --ajouter <f> | --importer <f> | --dechiffrer | --chiffrer | --restaurer [--fichier <index.html>]');
+    process.exit(0);
+  }
+
   const html = fs.readFileSync(fichier, 'utf8');
-  const phrase = await demanderPhrase();
-  const { D, donnees } = await dechiffrer(html, phrase);
+  const D = JSON.parse(extraireBloc(html));
+  const enClair = !D.c;
+  let phrase = null, donnees;
+
+  if (enClair) {
+    donnees = D.clair;
+    console.log('Source : données EN CLAIR (mode développement).');
+  } else {
+    phrase = await demanderPhrase(false);
+    const k = await clef(phrase, deb64(D.s), D.i, ['decrypt']);
+    let clair;
+    try {
+      clair = await wc.subtle.decrypt({ name: 'AES-GCM', iv: deb64(D.v) }, k, deb64(D.c));
+    } catch (e) {
+      console.error('Phrase de passe incorrecte (ou données corrompues).');
+      process.exit(1);
+    }
+    donnees = JSON.parse(Buffer.from(clair).toString('utf8'));
+  }
+
   let familles = normaliser(donnees);
   console.log('Données actuelles : ' + familles.map(r => r.n + ' (' + compter(r) + ' pers.)').join(' · '));
 
@@ -131,8 +197,26 @@ function compter(r) { let c = 0; parcourir(r, () => c++); return c; }
 
   const total = reindexer(familles); // identifiants uniques + générations recalculées
   const structure = familles.length === 1 ? familles[0] : { familles };
-  const bloc = await chiffrer(structure, phrase, D.i);
+  const iterations = D.i || 310000;
+
+  const sortirEnClair = args.dechiffrer || (enClair && !args.chiffrer);
+  let bloc;
+  if (sortirEnClair) {
+    bloc = JSON.stringify({ clair: structure, i: iterations });
+  } else {
+    if (!phrase) phrase = await demanderPhrase(true); // --chiffrer depuis le mode en clair
+    bloc = await chiffrer(structure, phrase, iterations);
+  }
+
   const html2 = html.replace(/(<script id="data" type="application\/octet-stream">)[\s\S]*?(<\/script>)/, '$1' + bloc + '$2');
+  fs.copyFileSync(fichier, sauvegarde); // pour --restaurer
   fs.writeFileSync(fichier, html2, 'utf8');
-  console.log('Terminé : ' + familles.length + ' famille(s), ' + total + ' personnes. index.html rechiffré (nouveau sel/IV).');
+  console.log('Terminé : ' + familles.length + ' famille(s), ' + total + ' personnes.');
+  if (sortirEnClair) {
+    console.log('⚠ Les données sont stockées EN CLAIR (aucun mot de passe demandé au chargement).');
+    console.log('⚠ Ne publiez PAS le site dans cet état — lancez « node outils/maj-donnees.js --chiffrer » avant toute mise en ligne ou commit.');
+  } else {
+    console.log('index.html rechiffré (nouveau sel/IV) — le mot de passe est de nouveau exigé.');
+  }
+  console.log('Pour annuler : node outils/maj-donnees.js --restaurer');
 })();
