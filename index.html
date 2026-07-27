@@ -1278,7 +1278,7 @@ function patronyme(nom){
   }
   return t.length>1?t[t.length-1]:nom;
 }
-/* fin du patronyme (« Bertin de La Hautière » → « de La Hautière ») : sert au classement */
+/* fin du patronyme (« Untel de La Chose » → « de La Chose ») : sert au classement */
 function finPat(pt){
   var t=pt.split(' ');
   for(var i=t.length-1;i>0;i--){
