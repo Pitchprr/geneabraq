@@ -337,6 +337,45 @@ li.n.cible>.rang{background:rgba(169,130,47,.22);box-shadow:inset 3px 0 0 var(--
 .acc-portee{text-align:center;font-size:.8rem;color:var(--estompe);margin:10px 0 0}
 .acc-portee button{font-family:var(--serif);font-size:.8rem;background:none;border:0;cursor:pointer;
   color:var(--azur);text-decoration:underline;text-underline-offset:2px;padding:0}
+/* ---------- retour en haut (vues longues : arbre, index, calendrier) ---------- */
+.haut{position:fixed;right:20px;bottom:24px;z-index:45;width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  border:1px solid var(--or-pale);background:rgba(245,241,229,.94);color:var(--sable);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  box-shadow:0 2px 8px rgba(43,36,26,.16);
+  opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity .18s,transform .18s,border-color .15s,color .15s}
+.haut.on{opacity:1;pointer-events:auto;transform:none}
+.haut:hover{border-color:var(--or);color:var(--gueules);background:var(--velin-clair)}
+.haut svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round}
+@media (max-width:720px){
+  /* au-dessus de la barre d'onglets */
+  .haut{right:14px;bottom:calc(66px + env(safe-area-inset-bottom));width:40px;height:40px}
+}
+/* ---------- seuil : page d'entrée, présentation puis recueil du nom ---------- */
+#seuil{display:none;padding:10px 0 40px}
+.se-carte{max-width:660px;margin:0 auto;background:var(--velin-clair);border:1px solid var(--or-pale);
+  border-radius:3px;padding:32px 38px 26px;box-shadow:0 2px 10px rgba(43,36,26,.07)}
+.se-orn{text-align:center;color:var(--or);font-size:1.5rem;margin:0 0 6px;line-height:1}
+.se-carte h2{font-family:var(--titre);font-size:1.9rem;color:var(--gueules);text-align:center;
+  margin:0 0 20px;font-weight:400}
+.se-laius p{font-size:.95rem;line-height:1.62;color:var(--encre);margin:0 0 12px}
+.se-laius a{color:var(--azur)}
+.se-laius b{font-weight:600}
+.se-laius strong{font-family:var(--titre);font-size:1.05rem;font-weight:600;color:var(--sable)}
+.se-qui{margin:24px 0 0;padding-top:20px;border-top:1px solid var(--rail);position:relative}
+.se-qui label{display:block;font-family:var(--titre);font-size:1.15rem;color:var(--sable);margin:0 0 9px}
+.se-qui input{width:100%;box-sizing:border-box;font-family:var(--serif);font-size:1.05rem;
+  padding:11px 14px;border:1px solid var(--rail);background:var(--velin);color:var(--encre);border-radius:2px}
+.se-qui input:focus{outline:none;border-color:var(--or);background:#fff}
+.se-qui .sugg{position:absolute;left:0;right:0;z-index:30}
+.se-aide{font-size:.84rem;color:var(--estompe);font-style:italic;margin:9px 0 0;line-height:1.5}
+.se-pied{text-align:center;margin:22px 0 0}
+.se-pied button{font-family:var(--serif);font-size:.82rem;letter-spacing:.06em;background:none;
+  border:0;color:var(--estompe);cursor:pointer;padding:6px 10px}
+.se-pied button:hover{color:var(--gueules)}
+body.au-seuil .barre,body.au-seuil .moi-coin,body.au-seuil .chiffres{display:none}
+@media (max-width:720px){ .se-carte{padding:24px 20px 20px;border:0;box-shadow:none} }
 /* ---------- arbre de famille (vue focus) ---------- */
 #focus{display:none}
 .foc-tete{max-width:1100px;margin:0 auto 14px}
@@ -387,9 +426,20 @@ li.n.cible>.rang{background:rgba(169,130,47,.22);box-shadow:inset 3px 0 0 var(--
 #focEvent .sect:hover path{stroke:var(--or);stroke-width:1.6}
 #focEvent text{pointer-events:none}
 @media (max-width:720px){
-  .foc-regl{margin-left:0}
-  .foc-cadre{max-height:calc(100vh - 150px)}
-  .foc-ligne1 h2{font-size:1.2rem}
+  /* en-tête compact : l'arbre doit garder la hauteur pour lui */
+  .foc-tete{margin-bottom:10px}
+  .foc-ligne1{gap:8px;align-items:center}
+  .foc-ligne1 h2{font-size:1.05rem;order:3;flex:1 1 100%;margin:2px 0 0;text-align:center}
+  .foc-ligne1 .b{font-size:.68rem;letter-spacing:.08em;padding:6px 10px}
+  .foc-ligne1 #focFiche{margin-left:auto}
+  .foc-ligne2{gap:8px;margin-top:8px}
+  .foc-modes{display:grid;grid-template-columns:1fr 1fr;width:100%}
+  .foc-modes button{font-size:.7rem;letter-spacing:.05em;padding:8px 4px}
+  .foc-modes button+button{border-left:1px solid var(--rail)}
+  .foc-modes button:nth-child(-n+2){border-bottom:0}
+  .foc-regl{margin-left:0;width:100%;gap:10px 14px;justify-content:space-between}
+  .foc-stats{font-size:.76rem;margin-top:8px}
+  .foc-cadre{max-height:calc(100vh - 300px);min-height:260px}
 }
 /* ---------- calendrier ---------- */
 #calendrier{display:none;max-width:1000px;margin:0 auto}
@@ -462,10 +512,20 @@ input[type=search]::-webkit-search-decoration{-webkit-appearance:none;appearance
   .chiffres{font-size:.7rem;margin-top:9px}
   .moi-coin{position:static;text-align:center;max-width:none;margin-top:9px}
   .moi-dlg{top:12%;padding:18px 18px 14px}
-  /* barre réduite aux filtres */
-  .barre{padding:8px 12px;gap:8px}
-  .champ,#vArbre,#vIndex{display:none}
-  select.b{flex:1 1 0;min-width:0;font-size:.82rem;padding:11px 8px;border-radius:10px}
+  /* La barre du bas assure la navigation : celle du haut ne garde que
+     l'accueil (absent des onglets) et les réglages propres à l'arbre. */
+  .barre{padding:6px 12px;gap:8px;align-items:center}
+  .champ,#vArbre,#vIndex,#vParente,#vCal{display:none}
+  #vAccueil{font-size:.72rem;letter-spacing:.1em;padding:7px 12px;border-radius:9px;
+    background:none;border:1px solid var(--rail);color:var(--estompe)}
+  #vAccueil[aria-pressed=true]{color:var(--gueules);border-color:var(--or-pale)}
+  /* filtres : seulement là où ils ont un sens */
+  #souche,#niveau{display:none}
+  body[data-vue=arbre] #souche,body[data-vue=arbre] #niveau{
+    display:block;flex:1 1 130px;min-width:0;font-size:.78rem;padding:8px 26px 8px 9px;
+    border-radius:9px;text-overflow:ellipsis}
+  /* rien à régler hors de l'arbre : la barre se fait discrète */
+  body:not([data-vue=arbre]) .barre{padding:5px 12px;border-bottom-color:transparent}
   .resultat{font-size:.85rem;margin:0}
   .resultat:empty{display:none}
   main{padding:14px 12px calc(88px + env(safe-area-inset-bottom))}
@@ -555,6 +615,7 @@ input[type=search]::-webkit-search-decoration{-webkit-appearance:none;appearance
      « box-decoration-break: clone » répète bordure ET marge intérieure sur chaque
      page. Le rendu ne dépend donc plus des marges choisies dans le navigateur. */
   @page{ margin:14mm; }
+  .haut{display:none!important}
   body.impr-fiche .impr-cadre{display:none!important}
   /* ---- impression d'une fiche : mise en page de livre ---- */
   body.impr-fiche{background:#fff;color:#141310;font-family:var(--serif);
@@ -792,6 +853,32 @@ else autoOuvrir();
 </nav>
 
 <main>
+  <div id="seuil">
+    <div class="se-carte">
+      <p class="se-orn">❧</p>
+      <h2>Bienvenue</h2>
+      <div class="se-laius">
+        <p>Ces pages rassemblent les <b id="seN">…</b> personnes de plusieurs descendances alliées :
+          on y suit une famille de génération en génération, on y cherche un nom, une date, un lieu,
+          et l’on y calcule le lien de parenté entre deux personnes.</p>
+        <p>Les données proviennent de la base <a href="https://roglo.eu" target="_blank" rel="noopener">Roglo</a>,
+          qui reste la source de référence : c’est là que se font les corrections et les ajouts.
+          Le recensement <b>n’est pas exhaustif</b> — toutes les branches n’y figurent pas et des
+          erreurs subsistent. Si vous repérez une inexactitude, signalez-la au magicien Roglo.</p>
+        <p>Projet personnel de <strong>Paul-Henri Poirier</strong>, mis à disposition de sa famille
+          pour la seule consultation. Ces pages contiennent des informations sur des personnes vivantes :
+          merci de ne pas les diffuser.</p>
+      </div>
+      <div class="se-qui">
+        <label for="seQ">Pour commencer, quel est votre nom&nbsp;?</label>
+        <input id="seQ" type="search" placeholder="votre nom…" autocomplete="off">
+        <div class="sugg" id="seSugg"></div>
+        <p class="se-aide">Chaque personne sera située par rapport à vous — «&nbsp;votre grand-mère&nbsp;»,
+          «&nbsp;votre cousin germain&nbsp;» — et votre descendance s’ouvrira en premier.</p>
+      </div>
+      <p class="se-pied"><button type="button" id="seSansNom">Entrer sans me nommer ›</button></p>
+    </div>
+  </div>
   <div id="accueil"></div>
   <div id="arbre"></div>
   <div id="index"></div>
@@ -880,6 +967,9 @@ else autoOuvrir();
     <button type="button" id="moiOublier" hidden>Ne plus me situer</button></p>
 </div>
 <div class="impr-cadre" id="imprCadre" aria-hidden="true"><span></span></div>
+<button type="button" class="haut" id="haut" aria-label="Revenir en haut de la page" title="Revenir en haut">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
 <div class="voile" id="voile"></div>
 <aside class="fiche" id="fiche" role="dialog" aria-modal="false" aria-labelledby="fnom">
   <button class="fermer" id="fermer" aria-label="Fermer">×</button>
@@ -1560,6 +1650,12 @@ function vue(mode){
   vueCal.style.display=mode==='calendrier'?'block':'none';
   var elFoc=document.getElementById('focus');
   if(elFoc) elFoc.style.display=mode==='focus'?'block':'none';
+  var elSe=document.getElementById('seuil');
+  if(elSe) elSe.style.display=mode==='seuil'?'block':'none';
+  /* au seuil, l'outillage de navigation reste en retrait */
+  document.body.classList.toggle('au-seuil',mode==='seuil');
+  document.body.dataset.vue=mode;          /* les filtres ne servent que dans l'arbre */
+  if(window.majHaut) window.majHaut();
   bAcc.setAttribute('aria-pressed',String(mode==='accueil'));
   bA.setAttribute('aria-pressed',String(mode==='arbre'));
   bI.setAttribute('aria-pressed',String(mode==='index'));
@@ -1975,11 +2071,13 @@ function fiche(n){
   var etaitOuverte=fic.classList.contains('on');
   fic.scrollTop=0;
   fic.classList.add('on'); voile.classList.add('on');
+  if(window.majHaut) window.majHaut();
   if(!etaitOuverte) pousser('fiche');
 }
 function fermer(depuisHist){
   fic.classList.remove('on');voile.classList.remove('on');
   depiler('fiche',depuisHist===true);
+  if(window.majHaut) window.majHaut();
 }
 document.getElementById('fermer').onclick=function(){fermer()};
 voile.onclick=function(){fermer()};
@@ -3448,8 +3546,49 @@ moiVoile.onclick=fermerMoi;
   if(toutDemande){ ecritTout(true); definirPortee(null) }
   else if(MOI) definirPortee(famillesConcernees(MOI));
   else definirPortee(null);
-  /* l'accueil est la première vue */
-  vue('accueil');
+  /* première visite : on se présente et l'on demande le nom avant d'entrer */
+  if(!MOI&&!litSeuil()&&!toutDemande) ouvrirSeuil();
+  else vue('accueil');
+})();
+/* ---------- retour en haut ----------
+   Sur les vues qui défilent longuement (l'arbre surtout), un bouton apparaît
+   dès qu'on a quitté le haut de la page ; il s'efface si le volet est ouvert. */
+(function(){
+  var b=document.getElementById('haut');
+  if(!b) return;
+  var LONGUES={arbre:1,index:1,calendrier:1};
+  function maj(){
+    var y=window.pageYOffset||document.documentElement.scrollTop||0;
+    var utile=LONGUES[VUE_COURANTE]&&y>380
+      &&!fic.classList.contains('on')
+      &&!(typeof rechM!=='undefined'&&rechM&&rechM.classList.contains('on'));
+    b.classList.toggle('on',!!utile);
+  }
+  window.addEventListener('scroll',maj,{passive:true});
+  window.majHaut=maj;                     /* rappelé aux changements de vue et de volet */
+  b.onclick=function(){
+    try{ window.scrollTo({top:0,behavior:'smooth'}) }catch(e){ window.scrollTo(0,0) }
+    b.classList.remove('on');
+  };
+  maj();
+})();
+/* ---------- seuil ---------- */
+function litSeuil(){try{return localStorage.getItem('braq.seuil')==='1'}catch(e){return false}}
+function ecritSeuil(){try{localStorage.setItem('braq.seuil','1')}catch(e){}}
+function ouvrirSeuil(){
+  var n=document.getElementById('seN');
+  if(n) n.textContent=ordre.length;   /* le même effectif que le bandeau */
+  vue('seuil');
+}
+function franchirSeuil(){ ecritSeuil(); vue('accueil'); window.scrollTo(0,0); }
+(function initSeuil(){
+  var q=document.getElementById('seQ');
+  if(q) brancherChoixPersonne(q,document.getElementById('seSugg'),function(n){
+    definirMoi(n);      /* mémorise l'identité, ajuste la portée et le tableau de bord */
+    franchirSeuil();
+  });
+  var s=document.getElementById('seSansNom');
+  if(s) s.onclick=franchirSeuil;
 })();
 /* raccourci discret vers le mode complet */
 document.addEventListener('keydown',function(e){
