@@ -173,6 +173,14 @@ li.n.cible>.rang{background:rgba(169,130,47,.22);box-shadow:inset 3px 0 0 var(--
 .fiche .qn:hover{color:var(--gueules)}
 .fiche .pv{font-size:.78rem;color:var(--estompe);white-space:nowrap}
 .fiche .souscat{font-family:var(--titre);font-style:italic;color:var(--or);font-size:.98rem;margin:10px 0 3px}
+/* postérité ventilée par génération */
+.post-g{margin:6px 0 4px}
+.pg-l{display:flex;align-items:center;gap:8px;margin:0 0 3px}
+.pg-n{flex:0 0 40px;text-align:right;font-family:var(--titre);font-size:1rem;color:var(--sable)}
+.pg-b{height:9px;border-radius:2px;background:linear-gradient(90deg,var(--or-pale),var(--or));
+  max-width:120px;flex:0 0 auto}
+.pg-t{font-size:.85rem;color:var(--encre)}
+.post-stat{font-size:.85rem;color:var(--estompe);font-style:italic;margin-top:7px!important}
 .fiche .asc-cotes{display:flex;gap:20px;flex-wrap:wrap}
 .fiche .asc-cote{flex:1 1 240px;min-width:0}
 .fiche .asc-titre{font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gueules);
@@ -213,6 +221,10 @@ li.n.cible>.rang{background:rgba(169,130,47,.22);box-shadow:inset 3px 0 0 var(--
   padding:14px 18px;background:var(--velin-clair);border:1px solid var(--or-pale);border-radius:3px}
 .p-phrase .p-detail{font-family:var(--serif);font-size:.88rem;color:var(--encre)}
 .p-conseil{font-style:italic;color:var(--estompe);margin:18px 4px}
+.p-relais-l{display:flex;gap:10px;flex-wrap:wrap;margin:-8px 0 16px}
+.p-relais{font-family:var(--serif);font-size:.84rem;padding:8px 13px;cursor:pointer;
+  border:1px solid var(--or-pale);background:var(--velin-clair);color:var(--azur);border-radius:2px}
+.p-relais:hover{border-color:var(--or);background:var(--argent);color:var(--gueules)}
 .pv-anc{display:flex;justify-content:center}
 .p-carte{display:flex;flex-direction:column;align-items:center;gap:1px;border:1px solid var(--rail);
   background:var(--argent);border-radius:3px;padding:8px 14px;cursor:pointer;font-family:var(--serif);
@@ -253,6 +265,62 @@ li.n.cible>.rang{background:rgba(169,130,47,.22);box-shadow:inset 3px 0 0 var(--
 .p-action button{font-family:var(--serif);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;
   border:1px solid var(--rail);background:var(--velin-clair);color:var(--encre);padding:6px 11px;border-radius:2px;cursor:pointer}
 .p-action button:hover{border-color:var(--or);color:var(--sable)}
+/* ---------- accueil ---------- */
+#accueil{display:none;max-width:840px;margin:0 auto}
+.acc-titre{font-family:var(--titre);font-size:1.7rem;font-weight:600;text-align:center;
+  margin:6px 0 4px;color:var(--sable)}
+.acc-sous{text-align:center;font-family:var(--titre);font-style:italic;color:var(--encre);
+  margin:0 0 22px;font-size:1.02rem}
+.acc-qui{max-width:430px;margin:0 auto 8px;position:relative}
+.acc-qui label{display:block;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--gueules);margin-bottom:6px;font-weight:600;text-align:center}
+.acc-qui input{width:100%;font-family:var(--serif);font-size:1.05rem;padding:11px 14px;
+  border:1px solid var(--rail);background:var(--argent);color:var(--sable);border-radius:2px;outline:none}
+.acc-qui input:focus{border-color:var(--or);box-shadow:0 0 0 2px rgba(169,130,47,.22)}
+.acc-aide{text-align:center;font-size:.87rem;color:var(--estompe);font-style:italic;margin:8px 0 26px}
+.acc-sep{display:flex;align-items:center;gap:14px;color:var(--estompe);font-size:.78rem;
+  letter-spacing:.14em;text-transform:uppercase;margin:0 0 16px}
+.acc-sep::before,.acc-sep::after{content:"";flex:1;border-top:1px solid var(--rail)}
+.acc-cartes{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.acc-carte{flex:1 1 200px;max-width:250px;text-align:left;background:var(--velin-clair);
+  border:1px solid var(--rail);border-radius:3px;padding:12px 14px;cursor:pointer;font-family:var(--serif)}
+.acc-carte:hover{border-color:var(--or);background:var(--argent)}
+.acc-carte .ac-nom{display:block;font-family:var(--titre);font-size:1.08rem;color:var(--sable);line-height:1.25}
+.acc-carte .ac-info{display:block;font-size:.78rem;color:var(--estompe);margin-top:3px}
+/* tableau de bord une fois identifié */
+.acc-bonjour{text-align:center;margin:0 0 20px}
+.acc-bonjour .ab-nom{font-family:var(--titre);font-size:1.9rem;font-weight:600;color:var(--sable);display:block}
+.acc-bonjour .ab-sous{font-size:.85rem;color:var(--estompe);letter-spacing:.05em}
+.acc-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:0 0 24px}
+.acc-actions button{font-family:var(--serif);font-size:.84rem;letter-spacing:.06em;text-transform:uppercase;
+  padding:9px 15px;border:1px solid var(--rail);background:var(--velin-clair);color:var(--encre);
+  border-radius:2px;cursor:pointer}
+.acc-actions button:hover{border-color:var(--or);color:var(--sable)}
+.acc-actions button.majeur{background:var(--sable);color:var(--velin-clair);border-color:var(--sable)}
+.acc-blocs{display:flex;flex-wrap:wrap;gap:20px}
+.acc-bloc{flex:1 1 280px;min-width:0}
+.acc-bloc h3{font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gueules);
+  margin:0 0 7px;border-bottom:1px solid var(--rail);padding-bottom:3px;font-weight:600}
+.acc-bloc p{margin:.25em 0;font-size:.95rem}
+.acc-bloc button{font-family:var(--titre);font-size:1.02rem;background:none;border:0;padding:0;
+  cursor:pointer;color:var(--sable);text-align:left}
+.acc-bloc button:hover{color:var(--gueules)}
+.acc-bloc .role{font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--estompe);
+  display:inline-block;min-width:74px}
+.acc-bloc .ac-date{font-size:.78rem;color:var(--estompe)}
+.acc-vide{font-style:italic;color:var(--estompe);font-size:.9rem}
+.acc-lignee{font-size:.9rem;line-height:1.7}
+.acc-lignee button{font-family:var(--serif);font-size:.9rem;color:var(--azur);
+  text-decoration:underline;text-decoration-color:var(--or-pale);text-underline-offset:2px}
+.acc-lignee .sep{color:var(--or);margin:0 4px}
+/* accès discret au mode complet */
+.acc-pied{text-align:center;margin:34px 0 6px}
+.acc-fleuron{background:none;border:0;color:var(--or-pale);font-size:1.1rem;cursor:pointer;
+  padding:6px 12px;letter-spacing:.4em;line-height:1}
+.acc-fleuron:hover{color:var(--or)}
+.acc-portee{text-align:center;font-size:.8rem;color:var(--estompe);margin:10px 0 0}
+.acc-portee button{font-family:var(--serif);font-size:.8rem;background:none;border:0;cursor:pointer;
+  color:var(--azur);text-decoration:underline;text-underline-offset:2px;padding:0}
 /* ---------- calendrier ---------- */
 #calendrier{display:none;max-width:1000px;margin:0 auto}
 .cal-tete{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
@@ -616,7 +684,8 @@ else autoOuvrir();
     <button class="vider" id="vider" aria-label="Effacer">×</button>
     <div class="sugg" id="sugg" role="listbox" aria-label="Suggestions"></div>
   </div>
-  <button class="b" id="vArbre" aria-pressed="true">Arbre</button>
+  <button class="b" id="vAccueil" aria-pressed="true">Accueil</button>
+  <button class="b" id="vArbre" aria-pressed="false">Arbre</button>
   <button class="b" id="vIndex" aria-pressed="false">Index</button>
   <button class="b" id="vParente" aria-pressed="false">Parenté</button>
   <button class="b" id="vCal" aria-pressed="false">Calendrier</button>
@@ -635,6 +704,7 @@ else autoOuvrir();
 </nav>
 
 <main>
+  <div id="accueil"></div>
   <div id="arbre"></div>
   <div id="index"></div>
   <div id="parente">
@@ -1078,12 +1148,16 @@ document.getElementById('niveau').onchange=function(){deplier(parseInt(this.valu
 /* Sélecteur : d'abord les familles, puis seulement les branches substantielles
    (les innombrables « Branche X (1) » sans postérité sont inutiles au filtrage) */
 var sel=document.getElementById('souche');
-(function bâtirSouches(){
-  if(FAMILLES.length>1) sel.options[0].textContent='Toutes les familles';
-  FAMILLES.forEach(function(f){
+function bâtirSouches(){
+  sel.innerHTML='';
+  var o0=document.createElement('option'); o0.value='';
+  var visibles=FAMILLES.filter(function(f){return !PORTEE||PORTEE.indexOf(String(f.i))>-1});
+  o0.textContent=visibles.length>1?'Toutes les familles':'Toute la descendance';
+  sel.appendChild(o0);
+  visibles.forEach(function(f){
     var total=f.desc+1;
     var parent=sel;
-    if(FAMILLES.length>1){
+    if(visibles.length>1){
       parent=document.createElement('optgroup');
       parent.label='Descendance '+deNom(f.n);
       sel.appendChild(parent);
@@ -1100,17 +1174,23 @@ var sel=document.getElementById('souche');
       parent.appendChild(o);
     });
   });
-})();
+}
+bâtirSouches();
 sel.onchange=function(){
   var v=this.value, fam=v.charAt(0)==='f'?v.slice(1):null;
   FAMILLES.forEach(function(f){
+    if(PORTEE&&PORTEE.indexOf(String(f.i))<0){        /* hors portée : reste masquée */
+      if(f.el) f.el.classList.add('masque');
+      if(f.titre) f.titre.style.display='none';
+      return;
+    }
     var contient=!v||(fam&&String(f.i)===fam);
     enfants(f).forEach(function(c){
       if(String(c.i)===v) contient=true;
       c.el.classList.toggle('masque', !!v && !fam && String(c.i)!==v);
     });
     f.el.classList.toggle('masque', !contient);
-    if(f.titre) f.titre.style.display=contient?'':'none';
+    if(f.titre) f.titre.style.display=(contient&&(!PORTEE||PORTEE.length>1))?'':'none';
   });
 };
 
@@ -1189,6 +1269,7 @@ function calculerSuggestions(s){
   var debut=[],dedans=[],maries=[],autres=[];
   ordre.forEach(function(n){
     n._mar=null; n._ctx=null;
+    if(!dansPortee(n)) return;
     var nn=norm(n.n), p=nn.indexOf(s);
     if(p===0||(p>0&&nn.charAt(p-1)===' ')){debut.push(n);return}
     if(p>-1){dedans.push(n);return}
@@ -1297,7 +1378,7 @@ var indexBati=false;
 function bâtirIndex(){
   if(indexBati) return;
   indexBati=true;
-  var l=ordre.slice().sort(function(a,b){
+  var l=ordre.filter(dansPortee).sort(function(a,b){
     var x=cleTri(a), y=cleTri(b);
     if(x!==y) return x<y?-1:1;
     var pa=norm(a.pat), pb=norm(b.pat);
@@ -1333,17 +1414,21 @@ function bâtirIndex(){
   });
 }
 var vueParente=document.getElementById('parente'), bP=document.getElementById('vParente'),
-    vueCal=document.getElementById('calendrier'), bC=document.getElementById('vCal');
+    vueCal=document.getElementById('calendrier'), bC=document.getElementById('vCal'),
+    bAcc=document.getElementById('vAccueil');
 var calBati=false;
 function vue(mode){
   if(mode===true) mode='index';
   if(mode==='index') bâtirIndex();
   if(!mode) mode='arbre';
   if(mode==='calendrier'&&!calBati){calBati=true;majCal('')}
+  if(mode==='accueil') majAccueil();
+  accueil.style.display=mode==='accueil'?'block':'none';
   vueIndex.style.display=mode==='index'?'block':'none';
   arbre.style.display=mode==='arbre'?'block':'none';
   vueParente.style.display=mode==='parente'?'block':'none';
   vueCal.style.display=mode==='calendrier'?'block':'none';
+  bAcc.setAttribute('aria-pressed',String(mode==='accueil'));
   bA.setAttribute('aria-pressed',String(mode==='arbre'));
   bI.setAttribute('aria-pressed',String(mode==='index'));
   bP.setAttribute('aria-pressed',String(mode==='parente'));
@@ -1353,6 +1438,7 @@ function vue(mode){
     if(el) el.classList.toggle('actif',mode===t[1]);
   });
 }
+bAcc.onclick=function(){vue('accueil')};
 bA.onclick=function(){vue('arbre')};
 bI.onclick=function(){vue('index')};
 bP.onclick=function(){vue('parente')};
@@ -1372,7 +1458,12 @@ function centrerSur(n){
   aller(false);
   setTimeout(function(){aller(true)},400);
 }
+/* d'où venait-on avant d'ouvrir une personne ? (pour le bouton « Retour ») */
+var RETOUR=null, VUE_COURANTE='accueil';
+var NOMVUE={accueil:'l’accueil',index:'l’index',parente:'la parenté',calendrier:'le calendrier'};
 function allerA(n){
+  if(VUE_COURANTE!=='arbre')
+    RETOUR={mode:VUE_COURANTE,y:window.pageYOffset||document.documentElement.scrollTop||0};
   vue(false);
   var p=n.p; while(p){p.el.classList.remove('ferme');p.el.classList.remove('masque');p=p.p}
   n.el.classList.remove('masque');
@@ -1487,6 +1578,28 @@ function ascendance(n,max){
     courant=suivant;
   }
   return gens;
+}
+/* descendance ventilée par génération : enfants, petits-enfants, etc. */
+function descendanceParGeneration(n){
+  var gens=[], courant=[n], vus={};
+  vus[cid(n)]=1;
+  for(var g=0;g<12;g++){
+    var suiv=[];
+    courant.forEach(function(x){
+      enfantsTous(x).forEach(function(c){
+        var k=cid(c);
+        if(vus[k]) return;
+        vus[k]=1; suiv.push(c);
+      });
+    });
+    if(!suiv.length) break;
+    gens.push(suiv);
+    courant=suiv;
+  }
+  return gens;
+}
+function libGeneration(i){
+  return i===0?'enfants':i===1?'petits-enfants':arrFois(i-1)+'petits-enfants';
 }
 function descTotal(n,vus){
   vus=vus||{};
@@ -1619,8 +1732,36 @@ function fiche(n){
     });
     h+='</div>';
   }
-  var tot=descTotal(n);
-  if(tot>k.length) h+='<div class="bloc"><h3>Postérité</h3><p>'+tot+' descendants recensés au total.</p></div>';
+  /* postérité : total, ventilation par génération, et répartition */
+  var gensD=descendanceParGeneration(n);
+  var totD=gensD.reduce(function(s,g){return s+g.length},0);
+  if(totD>k.length){
+    h+='<div class="bloc"><h3>Postérité</h3>';
+    h+='<p><strong>'+totD+' descendants</strong> recensés sur '+gensD.length
+      +' génération'+(gensD.length>1?'s':'')+' :</p>';
+    h+='<div class="post-g">';
+    var mx=Math.max.apply(null,gensD.map(function(g){return g.length}));
+    gensD.forEach(function(g,i){
+      h+='<div class="pg-l"><span class="pg-n">'+g.length+'</span>'
+        +'<span class="pg-b" style="width:'+Math.max(3,Math.round(g.length/mx*100))+'%"></span>'
+        +'<span class="pg-t">'+libGeneration(i)+'</span></div>';
+    });
+    h+='</div>';
+    /* statistiques : seulement à partir de deux générations, sinon peu parlant */
+    if(gensD.length>=2){
+      var tous=gensD.reduce(function(a,g){return a.concat(g)},[]);
+      var f=tous.filter(function(x){return x.s==='F'}).length;
+      var m=tous.filter(function(x){return x.s==='M'}).length;
+      var enf=gensD.map(function(g){return g.length});
+      var moy=enf.length>1?(enf[1]/enf[0]):0;
+      h+='<p class="post-stat">';
+      if(f+m) h+=Math.round(m/(f+m)*100)+' % d’hommes, '+Math.round(f/(f+m)*100)+' % de femmes';
+      if(moy) h+=(f+m?' &nbsp;·&nbsp; ':'')+'en moyenne '+(Math.round(moy*10)/10).toString().replace('.',',')
+        +' enfant'+(moy>=2?'s':'')+' par enfant';
+      h+='</p>';
+    }
+    h+='</div>';
+  }
   /* ascendance au-delà des grands-parents, rangée par côté paternel / maternel */
   (function(){
     var pi=parentsInfo(n);
@@ -1978,8 +2119,20 @@ function majParente(){
       if(!lx) ph2='<strong>'+esc(best.x.n)+'</strong> est '+(best.x.s==='F'?'mariée':'marié')+' à '+esc(best.y.n)+', '+ly+' '+prB+'.';
       else if(!ly) ph2='<strong>'+esc(best.y.n)+'</strong> est '+(best.y.s==='F'?'mariée':'marié')+' à '+esc(best.x.n)+', '+lx+' '+prA+'.';
       else ph2=esc(best.x.n)+', '+lx+' '+prA+', est '+(best.x.s==='F'?'mariée':'marié')+' à '+esc(best.y.n)+', '+ly+' '+prB+'.';
+      /* le lien de sang existe de part et d'autre du couple : on propose de l'afficher */
+      var props='';
+      if(cid(best.y)!==cid(b))
+        props+='<button type="button" class="p-relais" data-x="'+best.y.i+'" data-y="'+b.i+'">'
+          +'Voir le lien entre '+esc(best.y.n)+' et '+esc(b.n)+'</button>';
+      if(cid(best.x)!==cid(a))
+        props+='<button type="button" class="p-relais" data-x="'+a.i+'" data-y="'+best.x.i+'">'
+          +'Voir le lien entre '+esc(a.n)+' et '+esc(best.x.n)+'</button>';
       pRes.innerHTML='<p class="p-phrase"><strong>'+esc(a.n)+'</strong> et <strong>'+esc(b.n)+'</strong> n\'ont pas d\'ancêtre commun par le sang, mais sont <strong>liés par alliance</strong>.'
-        +'<br><span class="p-detail">'+ph2+'</span></p>';
+        +'<br><span class="p-detail">'+ph2+'</span></p>'
+        +(props?'<p class="p-relais-l">'+props+'</p>':'');
+      pRes.querySelectorAll('.p-relais').forEach(function(bt){
+        bt.onclick=function(){ selA.set(idx[bt.dataset.x]); selB.set(idx[bt.dataset.y]) };
+      });
       return;
     }
     pRes.innerHTML='<p class="p-phrase"><strong>'+esc(a.n)+'</strong> et <strong>'+esc(b.n)+'</strong> n\'ont aucun ancêtre commun dans la base : '
@@ -2012,25 +2165,99 @@ bDetail.onclick=function(){
 function ouvrirParente(pref){
   vue('parente');
   window.scrollTo({top:0,behavior:'smooth'});
+  /* si vous vous êtes situé, le lien se calcule aussitôt entre vous et la personne */
+  if(pref&&MOI&&cid(MOI)!==cid(pref)){
+    selA.set(MOI); selB.set(pref);
+    return;
+  }
   if(pref) selA.set(pref);
   setTimeout(function(){document.getElementById(pref?'pB':'pA').focus()},60);
+}
+
+/* ---------- portée : les descendances qui concernent le lecteur ----------
+   97 % des personnes ne relèvent que d'une seule descendance ; n'afficher que
+   celle-là évite de noyer un parent sous 1787 inconnus. PORTEE=null → tout. */
+var PORTEE=null, TOUT_CLE='braq.tout';
+function famillesDeAscendance(n){
+  var vus={}, fam={}, file=[n];
+  while(file.length){
+    var x=file.shift(), k=cid(x);
+    if(vus[k]) continue;
+    vus[k]=1; fam[x.fam.i]=1;
+    (x.grp||[x]).forEach(function(m){ fam[m.fam.i]=1 });
+    voisinsParents(x).forEach(function(p){file.push(p)});
+  }
+  return Object.keys(fam);
+}
+/* les familles qui vous concernent : la vôtre, celle de votre conjoint,
+   et celles dont vos enfants descendent (leurs deux ascendances) */
+function famillesConcernees(n){
+  var fam={};
+  function ajouter(x){ famillesDeAscendance(x).forEach(function(i){fam[i]=1}) }
+  ajouter(n);
+  (n.grp||[n]).forEach(function(m){
+    (m.u||[]).forEach(function(u){ if(u.ref) ajouter(u.ref) });
+    (m.alli||[]).forEach(function(al){ ajouter(al.p) });
+  });
+  enfantsTous(n).forEach(ajouter);
+  return Object.keys(fam);
+}
+function dansPortee(n){
+  if(!PORTEE) return true;
+  return (n.grp||[n]).some(function(m){return PORTEE.indexOf(String(m.fam.i))>-1});
+}
+function appliquerPortee(){
+  /* arbre : on masque les descendances hors portée */
+  FAMILLES.forEach(function(f){
+    var dedans=!PORTEE||PORTEE.indexOf(String(f.i))>-1;
+    if(f.el) f.el.classList.toggle('masque',!dedans);
+    if(f.titre) f.titre.style.display=(dedans&&(!PORTEE||PORTEE.length>1))?'':'none';
+  });
+  /* sélecteur de branches : reconstruit sur les seules familles retenues */
+  bâtirSouches();
+  /* index : reconstruit à la prochaine ouverture */
+  indexBati=false; vueIndex.innerHTML='';
+  /* calendrier */
+  if(calFam){
+    bâtirCalFam();
+    if(PORTEE&&PORTEE.length===1) calFam.value=PORTEE[0];
+    if(calBati) majCal();
+  }
+}
+function definirPortee(p){
+  PORTEE=(p&&p.length)?p.map(String):null;
+  appliquerPortee();
+  if(accBati) majAccueil();
+}
+function modeTout(){ return !PORTEE }
+function litTout(){try{return localStorage.getItem(TOUT_CLE)==='1'}catch(e){return false}}
+function ecritTout(v){try{v?localStorage.setItem(TOUT_CLE,'1'):localStorage.removeItem(TOUT_CLE)}catch(e){}}
+function activerTout(){
+  ecritTout(true); definirPortee(null);
+  vue('arbre');
 }
 
 /* ---------- calendrier : anniversaires, dates, longévité, statistiques ---------- */
 var calCorps=document.getElementById('calCorps'), calFam=document.getElementById('calFam'),
     calOnglets=document.getElementById('calOnglets'), modeCal='anniv';
-(function(){
-  var o=document.createElement('option'); o.value=''; o.textContent='Toutes les familles';
-  calFam.appendChild(o);
-  FAMILLES.forEach(function(f){
+function bâtirCalFam(){
+  calFam.innerHTML='';
+  var visibles=FAMILLES.filter(function(f){return !PORTEE||PORTEE.indexOf(String(f.i))>-1});
+  if(visibles.length>1){
+    var o=document.createElement('option'); o.value=''; o.textContent='Toutes les familles';
+    calFam.appendChild(o);
+  }
+  visibles.forEach(function(f){
     var x=document.createElement('option'); x.value=f.i; x.textContent=deNom(f.n).replace(/^d'/,'d’');
     calFam.appendChild(x);
   });
-})();
+}
+bâtirCalFam();
 function calGens(){
   var v=calFam.value;
   return ordre.filter(function(n){
     if(v&&String(n.fam.i)!==v) return false;
+    if(!dansPortee(n)) return false;
     return !n.grp||representant(n)===n;   /* une seule copie par personne */
   });
 }
@@ -2248,6 +2475,156 @@ calOnglets.querySelectorAll('button').forEach(function(b){
 });
 calFam.onchange=function(){majCal()};
 
+/* ---------- accueil ---------- */
+var accueil=document.getElementById('accueil'), accBati=false;
+function periodeFamille(f){
+  var min=null,max=null;
+  (function m(n){
+    if(n.dn&&n.dn.a){ if(min===null||n.dn.a<min)min=n.dn.a; if(max===null||n.dn.a>max)max=n.dn.a }
+    enfants(n).forEach(m);
+  })(f);
+  return (min?min:'')+(min&&max&&max!==min?'–'+max:'');
+}
+function accBtn(n,cls){
+  return '<button type="button" class="'+(cls||'')+'" data-go="'+n.i+'">'+esc(n.n)+'</button>';
+}
+function majAccueil(){
+  accBati=true;
+  var h='';
+  if(!MOI){
+    h+='<p class="acc-titre">Archives familiales</p>';
+    h+='<p class="acc-sous">'+ordre.length+' personnes, sept générations</p>';
+    h+='<div class="acc-qui"><label for="accQ">Qui êtes-vous&nbsp;?</label>'
+      +'<input id="accQ" type="search" placeholder="votre nom…" autocomplete="off">'
+      +'<div class="sugg" id="accSugg"></div></div>';
+    h+='<p class="acc-aide">Le site situera alors chaque personne par rapport à vous.</p>';
+    var visibles=FAMILLES.filter(function(f){return !PORTEE||PORTEE.indexOf(String(f.i))>-1});
+    if(visibles.length>1){
+      h+='<p class="acc-sep">ou parcourir une descendance</p><div class="acc-cartes">';
+      visibles.forEach(function(f){
+        h+='<button type="button" class="acc-carte" data-fam="'+f.i+'">'
+          +'<span class="ac-nom">'+esc(f.n)+'</span>'
+          +'<span class="ac-info">'+(f.desc+1)+' personnes'+(periodeFamille(f)?' · '+periodeFamille(f):'')+'</span></button>';
+      });
+      h+='</div>';
+    }
+  }else{
+    /* tableau de bord personnel */
+    h+='<p class="acc-bonjour"><span class="ab-nom">'+esc(MOI.n)+'</span>'
+      +'<span class="ab-sous">génération '+ROM[MOI.g]+(vie(MOI)?' · '+vie(MOI):'')+'</span></p>';
+    h+='<p class="acc-actions">'
+      +'<button type="button" class="majeur" data-go="'+MOI.i+'">Ma fiche</button>'
+      +'<button type="button" data-vue="arbre">L’arbre</button>'
+      +'<button type="button" data-vue="parente">Un lien de parenté</button>'
+      +'<button type="button" data-vue="calendrier">Les anniversaires</button>'
+      +'</p>';
+    h+='<div class="acc-blocs">';
+    /* mes proches */
+    h+='<div class="acc-bloc"><h3>Mes proches</h3>';
+    var pi=parentsInfo(MOI), lignes='';
+    /* le parent non relié hérite du rôle restant : si l'un est le père, l'autre est la mère */
+    var sexeConnu=pi.filter(function(x){return x.p&&x.p.s}).map(function(x){return x.p.s});
+    pi.forEach(function(x){
+      var sx=x.p&&x.p.s;
+      if(!sx&&sexeConnu.length===1) sx=(sexeConnu[0]==='M'?'F':'M');
+      var role=sx==='F'?'Mère':sx==='M'?'Père':'Parent';
+      lignes+='<p><span class="role">'+role+'</span>'+(x.p?accBtn(x.p):esc(x.nom))+'</p>';
+    });
+    fratrieTous(MOI).forEach(function(f){
+      lignes+='<p><span class="role">'+(f.p.s==='F'?'Sœur':f.p.s==='M'?'Frère':'Fratrie')+'</span>'+accBtn(f.p)+'</p>';
+    });
+    enfantsTous(MOI).forEach(function(c){
+      lignes+='<p><span class="role">'+(c.s==='F'?'Fille':'Fils')+'</span>'+accBtn(c)
+        +(vie(c)?' <span class="ac-date">'+vie(c)+'</span>':'')+'</p>';
+    });
+    h+=lignes||'<p class="acc-vide">Aucun proche recensé.</p>';
+    h+='</div>';
+    /* anniversaires du mois */
+    h+='<div class="acc-bloc"><h3>Anniversaires du mois</h3>';
+    var auj=new Date(), mc=auj.getMonth()+1, jc=auj.getDate();
+    var anniv=ordre.filter(function(n){
+      return dansPortee(n)&&n.dn&&n.dn.j&&n.dn.m===mc&&!estDecede(n)&&(!n.grp||representant(n)===n);
+    }).sort(function(a,b){return a.dn.j-b.dn.j});
+    if(anniv.length){
+      anniv.slice(0,12).forEach(function(n){
+        var a=ageDe(n);
+        h+='<p'+(n.dn.j===jc?' style="background:rgba(169,130,47,.2);border-radius:2px"':'')+'>'
+          +'<span class="role">'+n.dn.j+' '+NOMMOIS[mc-1].slice(0,4)+'.</span>'+accBtn(n)
+          +(a?' <span class="ac-date">'+a.ans+' ans</span>':'')+'</p>';
+      });
+      if(anniv.length>12) h+='<p class="acc-vide">…et '+(anniv.length-12)+' autres.</p>';
+    }else h+='<p class="acc-vide">Aucun anniversaire ce mois-ci.</p>';
+    h+='</div></div>';
+    /* ma lignée */
+    var lg=lignee(MOI);
+    if(lg.length>1){
+      h+='<div class="acc-bloc" style="margin-top:20px"><h3>Ma lignée</h3><p class="acc-lignee">'
+        +lg.map(function(a,i){return i===lg.length-1?'<strong>'+esc(a.n)+'</strong>':accBtn(a)})
+           .join('<span class="sep">›</span>')+'</p></div>';
+    }
+    /* portée courante */
+    if(PORTEE&&PORTEE.length){
+      var noms=FAMILLES.filter(function(f){return PORTEE.indexOf(String(f.i))>-1})
+        .map(function(f){return esc(f.pat||patronyme(f.n))}).join(', ');
+      h+='<p class="acc-portee">Vous voyez la descendance '+noms
+        +' — <button type="button" id="accTout">voir toutes les familles</button></p>';
+    }else{
+      h+='<p class="acc-portee">Vous voyez l’ensemble des familles ('+ordre.length+' personnes)'
+        +' — <button type="button" id="accMienne">revenir à ma famille</button></p>';
+    }
+  }
+  /* accès discret au mode complet */
+  h+='<p class="acc-pied"><button type="button" class="acc-fleuron" id="accFleuron" aria-label="❧">❧</button></p>';
+  accueil.innerHTML=h;
+  accueil.querySelectorAll('[data-go]').forEach(function(b){
+    b.onclick=function(){allerA(idx[b.dataset.go])};
+  });
+  accueil.querySelectorAll('[data-vue]').forEach(function(b){
+    b.onclick=function(){vue(b.dataset.vue)};
+  });
+  accueil.querySelectorAll('[data-fam]').forEach(function(b){
+    b.onclick=function(){definirPortee([b.dataset.fam]);vue('arbre')};
+  });
+  var ft=accueil.querySelector('#accFleuron');
+  if(ft) ft.onclick=function(){ modeTout()?vue('arbre'):activerTout() };
+  var at=accueil.querySelector('#accTout');
+  if(at) at.onclick=activerTout;
+  var am=accueil.querySelector('#accMienne');
+  if(am) am.onclick=function(){ ecritTout(false); definirPortee(MOI?famillesConcernees(MOI):null) };
+  var aq=accueil.querySelector('#accQ');
+  if(aq) brancherChoixPersonne(aq,accueil.querySelector('#accSugg'),definirMoi);
+}
+/* champ de recherche de personne réutilisable (accueil et dialogue d'identité) */
+function brancherChoixPersonne(inp,boite,surChoix){
+  inp.addEventListener('input',function(){
+    clearTimeout(inp._t);
+    inp._t=setTimeout(function(){
+      var s=norm(inp.value.trim());
+      boite.innerHTML='';
+      if(s.length<2){boite.classList.remove('on');return}
+      var l=calculerSuggestions(s).slice(0,8);
+      if(!l.length){
+        boite.innerHTML='<div class="aucun">Aucune personne trouvée</div>';
+        boite.classList.add('on');return;
+      }
+      l.forEach(function(n){
+        var b=document.createElement('button'); b.type='button';
+        var fil=n.homo?filiationCourte(n):'';
+        b.innerHTML='<span class="sgen">gén. '+ROM[n.g]+'</span>'+surligner(n.n,s)
+          +(vie(n)?'<span class="svie">'+vie(n)+'</span>':'')
+          +(fil?'<span class="sfil">'+esc(fil)+'</span>':'');
+        b.onmousedown=function(e){e.preventDefault()};
+        b.onclick=function(){surChoix(n)};
+        boite.appendChild(b);
+      });
+      boite.classList.add('on');
+    },150);
+  });
+  inp.addEventListener('keydown',function(e){
+    if(e.key==='Enter'){var b=boite.querySelector('button');if(b){e.preventDefault();b.click()}}
+  });
+}
+
 /* ---------- identité du lecteur : « vue selon … » ---------- */
 var MOI=null;
 var MOI_CLE='braq.moi';
@@ -2270,10 +2647,13 @@ function definirMoi(n){
   majBandeauMoi();
   fermerMoi();
   if(n&&selA&&!selA.get()) selA.set(n);   /* la parenté part de vous */
-  if(n&&calFam){                          /* le calendrier se cale sur votre famille */
-    calFam.value=String(n.fam.i);
+  /* la portée suit votre identité, sauf si le mode complet est actif */
+  if(!litTout()) definirPortee(n?famillesConcernees(n):null);
+  if(n&&calFam&&PORTEE&&PORTEE.length===1){
+    calFam.value=PORTEE[0];
     if(calBati) majCal();
   }
+  if(accBati) majAccueil();
   if(fic.classList.contains('on')&&window.__ficheCourante) fiche(window.__ficheCourante);
 }
 /* le lien exprimé du point de vue du lecteur : « votre grand-mère »,
@@ -2360,10 +2740,30 @@ moiVoile.onclick=fermerMoi;
   MOI=retrouverMoi(litMoi());
   majBandeauMoi();
   if(MOI&&selA) selA.set(MOI);
-  if(MOI&&calFam) calFam.value=String(MOI.fam.i);
-  var plusTard=false;
-  try{plusTard=sessionStorage.getItem('braq.moi.plustard')==='1'}catch(e){}
-  if(!MOI&&!litMoi()&&!plusTard) setTimeout(ouvrirMoi,700);
+  /* portée : tout si le mode complet est actif ou demandé par l'adresse, sinon vos familles */
+  var toutDemande=litTout()||/(^|[#&])tout\b/.test(location.hash||'');
+  if(toutDemande){ ecritTout(true); definirPortee(null) }
+  else if(MOI) definirPortee(famillesConcernees(MOI));
+  else definirPortee(null);
+  /* l'accueil est la première vue */
+  vue('accueil');
+})();
+/* raccourci discret vers le mode complet */
+document.addEventListener('keydown',function(e){
+  if(e.key!=='t'&&e.key!=='T') return;
+  var a=document.activeElement;
+  if(a&&(a.tagName==='INPUT'||a.tagName==='TEXTAREA'||a.tagName==='SELECT')) return;
+  if(modeTout()) return;
+  activerTout();
+});
+/* le titre du bandeau ramène à l'accueil */
+(function(){
+  var h1=document.querySelector('.bandeau h1'), ecu=document.querySelector('.bandeau .ecu');
+  [h1,ecu].forEach(function(el){
+    if(!el) return;
+    el.style.cursor='pointer';
+    el.onclick=function(){vue('accueil');window.scrollTo({top:0,behavior:'smooth'})};
+  });
 })();
 
 /* ---------- mini-app mobile ---------- */
