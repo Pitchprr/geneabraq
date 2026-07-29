@@ -47,7 +47,9 @@ h1{font-family:var(--titre);font-weight:600;font-size:clamp(1.6rem,5vw,2.6rem);m
 #moiNom{font-family:var(--titre);font-size:.95rem;color:var(--sable);
   border-bottom:1px solid var(--or-pale);padding-bottom:1px}
 #moiNom:hover{color:var(--gueules)}
-.moi-x{color:var(--or);font-size:.9rem!important;margin-left:5px}
+.moi-x{color:var(--or);font-size:.72rem!important;margin-left:7px;text-decoration:underline;
+  text-underline-offset:2px;letter-spacing:.04em}
+.moi-x:hover{color:var(--gueules)}
 .moi-voile{position:fixed;inset:0;background:rgba(25,23,16,.42);opacity:0;pointer-events:none;
   transition:opacity .2s;z-index:88}
 .moi-voile.on{opacity:1;pointer-events:auto}
@@ -59,10 +61,18 @@ h1{font-family:var(--titre);font-weight:600;font-size:clamp(1.6rem,5vw,2.6rem);m
 .moi-dlg h2{font-family:var(--titre);font-size:1.5rem;font-weight:600;margin:0 0 4px}
 .moi-dlg p{font-size:.92rem;color:var(--encre);margin:0 0 14px;line-height:1.45}
 .moi-dlg .pchamp label{display:none}
-.moi-plus{margin:14px 0 0!important;text-align:right}
+.moi-dlg .moi-intro{margin-bottom:10px}
+.moi-effets{list-style:none;margin:0 0 15px;padding:0;border-left:2px solid var(--or-pale)}
+.moi-effets li{font-size:.86rem;line-height:1.45;color:var(--estompe);padding:0 0 0 11px;margin:0 0 7px}
+.moi-effets li:last-child{margin-bottom:0}
+.moi-effets b{color:var(--encre);font-weight:600}
+.moi-note{font-size:.78rem!important;color:var(--estompe);font-style:italic;line-height:1.45;
+  margin:12px 0 0!important;padding-top:10px;border-top:1px solid var(--rail)}
+.moi-plus{margin:10px 0 0!important;display:flex;gap:14px;align-items:center;justify-content:flex-end}
 .moi-plus button{font-family:var(--serif);font-size:.82rem;background:none;border:0;cursor:pointer;
-  color:var(--estompe);text-decoration:underline;text-underline-offset:2px;margin-left:14px}
+  color:var(--estompe);text-decoration:underline;text-underline-offset:2px}
 .moi-plus button:hover{color:var(--gueules)}
+.moi-plus #moiOublier{margin-right:auto;color:var(--gueules)}
 /* ligne « lien avec vous » dans la fiche */
 .moi-lien{background:rgba(169,130,47,.13);border-left:3px solid var(--or);
   padding:7px 11px;margin:-4px 0 14px;font-size:.95rem;color:var(--encre)}
@@ -521,11 +531,12 @@ input[type=search]::-webkit-search-decoration{-webkit-appearance:none;appearance
   #vAccueil[aria-pressed=true]{color:var(--gueules);border-color:var(--or-pale)}
   /* filtres : seulement là où ils ont un sens */
   #souche,#niveau{display:none}
-  body[data-vue=arbre] #souche,body[data-vue=arbre] #niveau{
+  /* la branche vaut pour l'arbre et pour l'index ; le dépliage, pour l'arbre seul */
+  body[data-vue=arbre] #souche,body[data-vue=index] #souche,body[data-vue=arbre] #niveau{
     display:block;flex:1 1 130px;min-width:0;font-size:.78rem;padding:8px 26px 8px 9px;
     border-radius:9px;text-overflow:ellipsis}
   /* rien à régler hors de l'arbre : la barre se fait discrète */
-  body:not([data-vue=arbre]) .barre{padding:5px 12px;border-bottom-color:transparent}
+  body:not([data-vue=arbre]):not([data-vue=index]) .barre{padding:5px 12px;border-bottom-color:transparent}
   .resultat{font-size:.85rem;margin:0}
   .resultat:empty{display:none}
   main{padding:14px 12px calc(88px + env(safe-area-inset-bottom))}
@@ -819,8 +830,9 @@ else autoOuvrir();
   <div class="moi-coin" id="moiCoin">
     <span class="moi-vide" id="moiVide"><button type="button" id="moiDefinir">Qui êtes-vous&nbsp;?</button></span>
     <span class="moi-plein" id="moiPlein" hidden>Vue selon
-      <button type="button" id="moiNom"></button>
-      <button type="button" class="moi-x" id="moiChanger" title="Changer">⇄</button>
+      <button type="button" id="moiNom" title="Voir votre place dans l’arbre"></button>
+      <button type="button" class="moi-x" id="moiChanger"
+        title="Changer de lecteur, ou revenir à la vue générale">changer</button>
     </span>
   </div>
 </header>
@@ -957,14 +969,24 @@ else autoOuvrir();
 <div class="moi-voile" id="moiVoile"></div>
 <div class="moi-dlg" id="moiDlg" role="dialog" aria-modal="true" aria-labelledby="moiTitre">
   <h2 id="moiTitre">Qui êtes-vous&nbsp;?</h2>
-  <p>Indiquez votre nom : le site situera chaque personne par rapport à vous
-     et pré-remplira le calcul de parenté.</p>
+  <p class="moi-intro" id="moiIntro">Indiquez votre nom : les pages se règleront sur vous.</p>
+  <ul class="moi-effets">
+    <li><b>Chaque personne située par rapport à vous</b> — «&nbsp;votre grand-mère&nbsp;»,
+      «&nbsp;votre cousin germain&nbsp;» s’affiche sur sa fiche.</li>
+    <li><b>Vos descendances d’abord</b> : l’arbre, l’index et les anniversaires
+      s’ouvrent sur votre branche. Les autres familles restent accessibles.</li>
+    <li><b>Le calcul de parenté part de vous</b>, sans avoir à vous ressaisir.</li>
+  </ul>
   <div class="pchamp">
     <input id="moiQ" type="search" placeholder="Votre nom…" autocomplete="off">
     <div class="sugg" id="moiSugg"></div>
   </div>
-  <p class="moi-plus"><button type="button" id="moiPasser">Plus tard</button>
-    <button type="button" id="moiOublier" hidden>Ne plus me situer</button></p>
+  <p class="moi-note" id="moiNote">Ce choix reste sur cet appareil et n’est envoyé nulle part.
+    Vous pourrez en changer à tout moment par «&nbsp;Vue selon&nbsp;», en haut de page.</p>
+  <p class="moi-plus">
+    <button type="button" id="moiOublier" hidden>Ne plus me situer</button>
+    <button type="button" id="moiPasser">Plus tard</button>
+  </p>
 </div>
 <div class="impr-cadre" id="imprCadre" aria-hidden="true"><span></span></div>
 <button type="button" class="haut" id="haut" aria-label="Revenir en haut de la page" title="Revenir en haut">
@@ -1361,6 +1383,31 @@ document.getElementById('niveau').onchange=function(){deplier(parseInt(this.valu
 /* Sélecteur : d'abord les familles, puis seulement les branches substantielles
    (les innombrables « Branche X (1) » sans postérité sont inutiles au filtrage) */
 var sel=document.getElementById('souche');
+var SOUCHE='';          /* filtre de branche courant, partagé par l'arbre et l'index */
+/* La descendance « de » quelqu'un : parmi celles où il figure, celle dont il porte
+   le nom ; à défaut, celle où son ascendance est la plus fournie. C'est elle qui
+   sert de filtre par défaut quand le lecteur se nomme. */
+function familleDeReference(n){
+  if(!n) return null;
+  var best=null;
+  copies(n).forEach(function(m){
+    if(!m.fam) return;
+    var patFam=m.fam.pat||patronyme(m.fam.n);
+    var score=(m.pat&&norm(patFam)===norm(m.pat)?100:0)+(m.g||0);
+    if(!best||score>best.score) best={score:score,i:String(m.fam.i)};
+  });
+  return best?best.i:null;
+}
+/* le nœud appartient-il à la branche retenue ? (l'index s'en sert aussi) */
+function dansSouche(n){
+  if(!SOUCHE) return true;
+  var fam=SOUCHE.charAt(0)==='f'?SOUCHE.slice(1):null;
+  return (n.grp||[n]).some(function(m){
+    if(fam) return String(m.fam.i)===fam;
+    for(var x=m;x;x=x.p) if(String(x.i)===SOUCHE) return true;
+    return false;
+  });
+}
 function bâtirSouches(){
   sel.innerHTML='';
   var o0=document.createElement('option'); o0.value='';
@@ -1387,10 +1434,13 @@ function bâtirSouches(){
       parent.appendChild(o);
     });
   });
+  /* on reprend le filtre courant s'il subsiste dans la nouvelle liste */
+  if(SOUCHE&&!sel.querySelector('option[value="'+SOUCHE+'"]')) SOUCHE='';
+  sel.value=SOUCHE;
 }
 bâtirSouches();
-sel.onchange=function(){
-  var v=this.value, fam=v.charAt(0)==='f'?v.slice(1):null;
+function appliquerSouche(){
+  var v=SOUCHE, fam=v.charAt(0)==='f'?v.slice(1):null;
   FAMILLES.forEach(function(f){
     if(PORTEE&&PORTEE.indexOf(String(f.i))<0){        /* hors portée : reste masquée */
       if(f.el) f.el.classList.add('masque');
@@ -1405,6 +1455,13 @@ sel.onchange=function(){
     f.el.classList.toggle('masque', !contient);
     if(f.titre) f.titre.style.display=(contient&&(!PORTEE||PORTEE.length>1))?'':'none';
   });
+  majTitre();          /* le bandeau suit la branche affichée */
+}
+sel.onchange=function(){
+  SOUCHE=this.value;
+  indexBati=false; vueIndex.innerHTML='';   /* l'index suit la branche choisie */
+  appliquerSouche();
+  if(VUE_COURANTE==='index') bâtirIndex();
 };
 
 /* ---------- recherche ---------- */
@@ -1597,7 +1654,11 @@ var indexBati=false;
 function bâtirIndex(){
   if(indexBati) return;
   indexBati=true;
-  var l=ordre.filter(dansPortee).sort(function(a,b){
+  /* une seule entrée par personne : les copies inter-bases sont fusionnées,
+     mais les vrais homonymes (personnes distinctes) restent bien distincts */
+  var l=ordre.filter(function(n){
+    return dansPortee(n)&&dansSouche(n)&&(!n.grp||representant(n)===n);
+  }).sort(function(a,b){
     var x=cleTri(a), y=cleTri(b);
     if(x!==y) return x<y?-1:1;
     var pa=norm(a.pat), pb=norm(b.pat);
@@ -2491,12 +2552,24 @@ function dansPortee(n){
 }
 /* le titre suit la portée : « Descendants de X » n'a de sens que si l'on ne
    regarde qu'une descendance ; sinon on s'en tient au titre générique */
+/* Le bandeau nomme ce qui est réellement à l'écran : une seule descendance
+   affichée — parce que la portée s'y réduit ou parce que le filtre de branche
+   l'y ramène — et c'est elle qui donne son titre à la page. */
 function majTitre(){
   var t='Archives familiales', sous='Plusieurs descendances alliées';
-  if(PORTEE&&PORTEE.length===1){
-    var f=FAMILLES.filter(function(x){return String(x.i)===PORTEE[0]})[0];
-    if(f){
-      t='Descendants '+deNom(f.n);
+  var vis=famsPortee(), f=null, branche=null;
+  if(SOUCHE){
+    var fam=SOUCHE.charAt(0)==='f'?SOUCHE.slice(1):null;
+    if(fam) f=vis.filter(function(x){return String(x.i)===fam})[0]||null;
+    else{
+      branche=idx[SOUCHE];
+      if(branche){ var r=branche; while(r.p) r=r.p; f=r }
+    }
+  }else if(vis.length===1) f=vis[0];
+  if(f){
+    t='Descendants '+deNom(f.n);
+    if(branche) sous='Branche '+branche.n+' · '+(branche.desc+1)+' personnes';
+    else{
       var p=periodeFamille(f);
       sous=(f.desc+1)+' personnes'+(p?' · '+p:'');
     }
@@ -3448,6 +3521,23 @@ function majBandeauMoi(){
   vide.hidden=!!MOI; plein.hidden=!MOI;
   if(MOI) document.getElementById('moiNom').textContent=MOI.n;
 }
+/* Les filtres partent de la descendance du lecteur : son arbre, son index,
+   ses anniversaires — plutôt que la première famille venue. Tout reste
+   élargissable par les sélecteurs et les pastilles. */
+function calerSurMoi(){
+  var ref=MOI?familleDeReference(MOI):null;
+  var plusieurs=famsPortee().length>1;
+  SOUCHE=(ref&&plusieurs)?('f'+ref):'';
+  bâtirSouches();
+  appliquerSouche();
+  indexBati=false; vueIndex.innerHTML='';
+  if(VUE_COURANTE==='index') bâtirIndex();
+  if(calFams){
+    calSel=(ref&&plusieurs)?[ref]:null;
+    bâtirCalFam();
+    if(calBati) majCal();
+  }
+}
 function definirMoi(n){
   MOI=n;
   ecritMoi(n?{n:n.n,b:n.b||''}:null);
@@ -3456,7 +3546,7 @@ function definirMoi(n){
   if(n&&selA&&!selA.get()) selA.set(n);   /* la parenté part de vous */
   /* la portée suit votre identité, sauf si le mode complet est actif */
   if(!litTout()) definirPortee(n?famillesConcernees(n):null);
-  if(calFams){ calSel=null; bâtirCalFam(); if(calBati) majCal() }
+  calerSurMoi();
   if(accBati) majAccueil();
   if(fic.classList.contains('on')&&window.__ficheCourante) fiche(window.__ficheCourante);
 }
@@ -3495,7 +3585,20 @@ var moiDlg=document.getElementById('moiDlg'), moiVoile=document.getElementById('
     moiQ=document.getElementById('moiQ');
 function ouvrirMoi(){
   moiDlg.classList.add('on'); moiVoile.classList.add('on');
-  document.getElementById('moiOublier').hidden=!MOI;
+  /* le propos change selon qu'on se nomme pour la première fois ou qu'on se remplace */
+  var dejaLa=!!MOI;
+  document.getElementById('moiTitre').textContent=dejaLa?'Changer de lecteur':'Qui êtes-vous ?';
+  document.getElementById('moiIntro').innerHTML=dejaLa
+    ? 'Les pages sont réglées sur <b>'+esc(MOI.n)+'</b>. Indiquez un autre nom pour les régler sur quelqu’un d’autre.'
+    : 'Indiquez votre nom : les pages se régleront sur vous.';
+  document.getElementById('moiNote').innerHTML=dejaLa
+    ? 'Ce choix ne touche que l’affichage — aucune donnée n’est modifiée, et rien n’est envoyé hors de cet appareil. '
+      +'«&nbsp;Ne plus me situer&nbsp;» revient à la vue générale, sans lien de parenté affiché.'
+    : 'Ce choix reste sur cet appareil et n’est envoyé nulle part. '
+      +'Vous pourrez en changer à tout moment par «&nbsp;Vue selon&nbsp;», en haut de page.';
+  var ou=document.getElementById('moiOublier');
+  ou.hidden=!dejaLa;
+  document.getElementById('moiPasser').textContent=dejaLa?'Annuler':'Plus tard';
   moiQ.value=''; document.getElementById('moiSugg').classList.remove('on');
   setTimeout(function(){moiQ.focus()},80);
 }
@@ -3546,6 +3649,7 @@ moiVoile.onclick=fermerMoi;
   if(toutDemande){ ecritTout(true); definirPortee(null) }
   else if(MOI) definirPortee(famillesConcernees(MOI));
   else definirPortee(null);
+  calerSurMoi();
   /* première visite : on se présente et l'on demande le nom avant d'entrer */
   if(!MOI&&!litSeuil()&&!toutDemande) ouvrirSeuil();
   else vue('accueil');
