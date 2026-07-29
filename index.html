@@ -397,8 +397,8 @@ button.pg-l:hover .pg-fl{opacity:1}
   /* la bulle occupe la largeur et se place en haut ou en bas selon la cible,
      pour ne jamais masquer ce qu'elle désigne */
   .tour-bulle{left:12px!important;right:12px!important;width:auto!important;transform:none!important}
-  .tour-bulle.bas{top:auto!important;bottom:calc(96px + env(safe-area-inset-bottom))!important}
-  .tour-bulle.haut{bottom:auto!important;top:calc(12px + env(safe-area-inset-top))!important}
+  .tour-bulle.tb-bas{top:auto!important;bottom:calc(96px + env(safe-area-inset-bottom))!important}
+  .tour-bulle.tb-haut{bottom:auto!important;top:calc(12px + env(safe-area-inset-top))!important}
   .tour-bulle h2{font-size:1.2rem}
   .tour-pieds button{padding:12px 16px}
 }
@@ -3990,7 +3990,7 @@ function tourCentrer(){
   tourTrou.className='tour-trou on plein';
   tourTrou.style.top='50%'; tourTrou.style.left='50%';
   tourTrou.style.width='0px'; tourTrou.style.height='0px';
-  tourBulle.classList.remove('haut'); tourBulle.classList.add('bas');
+  tourBulle.classList.remove('tb-haut'); tourBulle.classList.add('tb-bas');
   tourBulle.dataset.pose='bas';
   tourBulle.style.top='50%'; tourBulle.style.left='50%';
   tourBulle.style.transform='translate(-50%,-50%)';
@@ -4017,11 +4017,11 @@ function tourPlacer(el){
     }
     var couvre=r.bottom>H-hB-marge;              /* la bulle du bas la masquerait encore */
     var placeHaut=couvre&&r.top>hB+24;           /* … et il y a la place au-dessus */
-    tourBulle.classList.toggle('haut',placeHaut);
-    tourBulle.classList.toggle('bas',!placeHaut);
+    tourBulle.classList.toggle('tb-haut',placeHaut);
+    tourBulle.classList.toggle('tb-bas',!placeHaut);
     tourBulle.dataset.pose=placeHaut?'haut':'bas';
   }else{
-    tourBulle.classList.remove('haut','bas');
+    tourBulle.classList.remove('tb-haut','tb-bas');
     tourBulle.dataset.pose='';
   }
   /* toujours hors champ : mieux vaut une bulle centrée qu'un halo sur le vide */
@@ -4061,14 +4061,19 @@ function tourAfficher(){
   /* on laisse l'écran se remettre en place avant de viser — mais si la visite
      s'est achevée entre-temps, ce placement différé ne doit plus rien rallumer */
   var rang=TOUR.i;
-  setTimeout(function(){
+  function viser(){
     if(!TOUR.en||TOUR.i!==rang) return;
     var el=e.cible?e.cible():null;
     /* trace de la cible retenue : sert au diagnostic et aux tests, où la
        géométrie n'existe pas */
     tourTrou.dataset.cible=el?(el.id||el.className||el.tagName.toLowerCase()):'';
     tourPlacer(el);
-  },60);
+  }
+  /* Deux passes : la première dès que l'écran est en place, la seconde une fois
+     les animations finies (le volet glisse en 240 ms) — sans quoi le halo se
+     poserait sur la position de départ de l'élément, et non sur son arrivée. */
+  setTimeout(viser,60);
+  setTimeout(viser,340);
 }
 function tourDemarrer(){
   if(!ordre.length) return;
