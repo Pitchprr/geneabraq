@@ -394,8 +394,11 @@ button.pg-l:hover .pg-fl{opacity:1}
   cursor:pointer;border:1px solid var(--or-pale);background:var(--velin);color:var(--sable);border-radius:3px}
 .tour-lancer:hover{border-color:var(--or);background:var(--argent);color:var(--gueules)}
 @media (max-width:720px){
-  .tour-bulle{left:50%!important;transform:translateX(-50%);
-    bottom:calc(96px + env(safe-area-inset-bottom))!important;top:auto!important}
+  /* la bulle occupe la largeur et se place en haut ou en bas selon la cible,
+     pour ne jamais masquer ce qu'elle désigne */
+  .tour-bulle{left:12px!important;right:12px!important;width:auto!important;transform:none!important}
+  .tour-bulle.bas{top:auto!important;bottom:calc(96px + env(safe-area-inset-bottom))!important}
+  .tour-bulle.haut{bottom:auto!important;top:calc(12px + env(safe-area-inset-top))!important}
   .tour-bulle h2{font-size:1.2rem}
   .tour-pieds button{padding:12px 16px}
 }
@@ -3987,6 +3990,8 @@ function tourCentrer(){
   tourTrou.className='tour-trou on plein';
   tourTrou.style.top='50%'; tourTrou.style.left='50%';
   tourTrou.style.width='0px'; tourTrou.style.height='0px';
+  tourBulle.classList.remove('haut'); tourBulle.classList.add('bas');
+  tourBulle.dataset.pose='bas';
   tourBulle.style.top='50%'; tourBulle.style.left='50%';
   tourBulle.style.transform='translate(-50%,-50%)';
 }
@@ -3999,22 +4004,32 @@ function tourPlacer(el){
   catch(e){ try{ el.scrollIntoView() }catch(e2){} }
   var r=el.getBoundingClientRect();
   var hB=tourBulle.offsetHeight||210, lB=tourBulle.offsetWidth||400;
-  /* sur mobile la bulle est ancrée en bas : on remonte la cible pour la dégager */
+  var H=window.innerHeight;
+  /* Sur mobile : on essaie d'abord de dégager la cible en la remontant ; si elle
+     ne bouge pas (élément fixe, page non défilable), c'est la bulle qui bascule. */
   if(mob){
-    var plafond=window.innerHeight-hB-104;
-    if(r.bottom>plafond&&plafond>60){
+    var marge=100, plafond=H-hB-marge;
+    if(r.bottom>plafond&&plafond>80){
       var cont=tourDefilant(el), d=r.bottom-plafond+12;
       if(cont) cont.scrollTop+=d;
       else if(window.scrollBy) window.scrollBy(0,d);
       r=el.getBoundingClientRect();
     }
+    var couvre=r.bottom>H-hB-marge;              /* la bulle du bas la masquerait encore */
+    var placeHaut=couvre&&r.top>hB+24;           /* … et il y a la place au-dessus */
+    tourBulle.classList.toggle('haut',placeHaut);
+    tourBulle.classList.toggle('bas',!placeHaut);
+    tourBulle.dataset.pose=placeHaut?'haut':'bas';
+  }else{
+    tourBulle.classList.remove('haut','bas');
+    tourBulle.dataset.pose='';
   }
   /* toujours hors champ : mieux vaut une bulle centrée qu'un halo sur le vide */
-  if((!r.width&&!r.height)||r.bottom<0||r.top>window.innerHeight){ tourCentrer(); return }
+  if((!r.width&&!r.height)||r.bottom<0||r.top>H){ tourCentrer(); return }
   tourTrou.className='tour-trou on';
   tourTrou.style.top=(r.top-M)+'px'; tourTrou.style.left=(r.left-M)+'px';
   tourTrou.style.width=(r.width+2*M)+'px'; tourTrou.style.height=(r.height+2*M)+'px';
-  if(mob) return;                       /* la feuille de style ancre déjà la bulle en bas */
+  if(mob) return;                       /* la feuille de style pose déjà la bulle */
   tourBulle.style.transform='none';
   /* cible dans le volet : la bulle se range à côté, pour ne pas le masquer */
   var volet=document.getElementById('fiche');
