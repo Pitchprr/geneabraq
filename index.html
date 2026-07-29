@@ -1165,6 +1165,34 @@ function enfants(n){var r=[];(n.u||[]).forEach(function(u){(u.c||[]).forEach(fun
 /* les traits d'union comptent comme des espaces : un pr\u00e9nom compos\u00e9 se retrouve
    avec ou sans tiret (substitution de m\u00eame longueur : le surlignage reste align\u00e9) */
 function norm(s){return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[-\u2010\u2011\u2013]/g,' ')}
+/* ---------- correspondance par mots ----------
+   Un nom se tape rarement en entier : \u00ab Vianney d'Alan\u00e7on \u00bb pour \u00ab Vianney Audemard
+   d'Alan\u00e7on \u00bb, \u00ab Anne Exup\u00e9ry \u00bb pour \u00ab Anne de Saint-Exup\u00e9ry \u00bb, \u00ab B\u00e9r\u00e9nice Ragozin \u00bb
+   pour une \u00e9pouse inscrite sous son nom de naissance. Exiger une sous-cha\u00eene contigu\u00eb
+   condamnait ces saisies. On d\u00e9coupe d\u00e9sormais la requ\u00eate en mots et on exige que
+   chacun figure dans la cible, dans n'importe quel ordre. */
+var PARTICULE={de:1,du:1,des:1,d:1,la:1,le:1,les:1,von:1,van:1,di:1,della:1,dos:1,el:1,al:1,y:1};
+/* texte index\u00e9 : mots s\u00e9par\u00e9s par une espace unique et bord\u00e9 d'espaces, pour que
+   indexOf(' '+mot) teste un d\u00e9but de mot sans expression r\u00e9guli\u00e8re (appel\u00e9 sur
+   3 000+ personnes \u00e0 chaque frappe : on pr\u00e9calcule, on ne r\u00e9alloue pas) */
+function cleRech(txt){return ' '+norm(txt).replace(/[^a-z0-9]+/g,' ').trim()+' '}
+/* les particules seules ne filtrent rien, mais restent cherchables si on ne tape qu'elles */
+function motsCle(s){
+  var t=norm(s).replace(/[^a-z0-9]+/g,' ').trim().split(' ').filter(function(w){return w});
+  var u=t.filter(function(w){return !PARTICULE[w]});
+  return u.length?u:t;
+}
+/* 2 = tous les mots ouvrent un mot de la cible, 1 = tous pr\u00e9sents, 0 = non */
+function scoreMots(cles,cle){
+  if(!cles.length) return 0;
+  var fort=2;
+  for(var i=0;i<cles.length;i++){
+    if(cle.indexOf(' '+cles[i])>-1) continue;
+    if(cle.indexOf(cles[i])>-1){fort=1;continue}
+    return 0;
+  }
+  return fort;
+}
 /* les noms des parrains/marraines sont parfois accol\u00e9s ou juxtapos\u00e9s sans \u00ab et \u00bb dans la source */
 /* le sexe se déduit de l'accord de la notice (« né le… » / « née le… ») :
    plus fiable que le champ s quand la source contient une erreur */
@@ -1263,7 +1291,8 @@ function prep(n,parent,fam){
     if(u.d) u.d=corrigerNoms(u.d);
     if(u.a) u.a=corrigerNoms(u.a);
   });
-  n.k=norm(n.n+' '+(n.d||'')+' '+(n.u||[]).map(function(u){return (u.s||'')+' '+(u.d||'')+' '+(u.a||'')}).join(' '));
+  n.kn=cleRech(n.n);                       /* le nom seul : sert au classement des résultats */
+  n.k=cleRech(n.n+' '+(n.d||'')+' '+(n.u||[]).map(function(u){return (u.s||'')+' '+(u.d||'')+' '+(u.a||'')}).join(' '));
   n.desc=0;
   enfants(n).forEach(function(c){prep(c,n,fam)});
 }
@@ -1406,9 +1435,9 @@ ordre.forEach(function(n){
     if(!pc) return;
     var nomU=prenoms+' '+pc;
     if(norm(nomU)===norm(n.n)) return;
-    (n.mar=n.mar||[]).push({nom:nomU, avec:(u.ref?u.ref.n:u.s)});
+    (n.mar=n.mar||[]).push({nom:nomU, kn:cleRech(nomU), avec:(u.ref?u.ref.n:u.s)});
   });
-  if(n.mar) n.k+=' '+n.mar.map(function(e){return norm(e.nom)}).join(' ');
+  if(n.mar) n.k+=n.mar.map(function(e){return cleRech(e.nom).trim()}).join(' ')+' ';
 });
 
 /* ---------- construction de l'arbre ---------- */
@@ -1585,10 +1614,10 @@ function chercher(){
     res.textContent=''; deplier(parseInt(document.getElementById('niveau').value,10));
     return;
   }
-  var trouves=0;
+  var trouves=0, cles=motsCle(s);
   ordre.forEach(function(n){ if(n.el){n.el.classList.add('masque')} });
   ordre.forEach(function(n){
-    if(n.k.indexOf(s)>-1){
+    if(scoreMots(cles,n.k)){
       trouves++;
       n.el.classList.remove('masque'); n.el.classList.add('cible'); n.el.classList.remove('ferme');
       var p=n.p;
@@ -1605,10 +1634,30 @@ function chercher(){
 }
 /* ---------- suggestions ---------- */
 var sug=document.getElementById('sugg'), sugListe=[], sugAct=-1;
+/* chaque mot de la requête est surligné là où il apparaît, les zones étant fusionnées :
+   norm() conserve les longueurs, les positions restent donc valables sur le texte d'origine */
 function surligner(nom,s){
-  var pos=norm(nom).indexOf(s);
-  if(pos<0) return esc(nom);
-  return esc(nom.slice(0,pos))+'<b>'+esc(nom.slice(pos,pos+s.length))+'</b>'+esc(nom.slice(pos+s.length));
+  var t=norm(nom), zones=[];
+  motsCle(s).forEach(function(w){
+    var d=0,p;
+    while((p=t.indexOf(w,d))>-1){
+      if(p===0||!/[a-z0-9]/.test(t.charAt(p-1))) zones.push([p,p+w.length]);
+      d=p+1;
+    }
+  });
+  if(!zones.length) return esc(nom);
+  zones.sort(function(a,b){return a[0]-b[0]||a[1]-b[1]});
+  var fus=[];
+  zones.forEach(function(z){
+    var d=fus[fus.length-1];
+    if(d&&z[0]<=d[1]){ if(z[1]>d[1]) d[1]=z[1] } else fus.push([z[0],z[1]]);
+  });
+  var out='', cur=0;
+  fus.forEach(function(z){
+    out+=esc(nom.slice(cur,z[0]))+'<b>'+esc(nom.slice(z[0],z[1]))+'</b>';
+    cur=z[1];
+  });
+  return out+esc(nom.slice(cur));
 }
 function fermerSugg(){
   sug.classList.remove('on'); sug.innerHTML=''; sugListe=[]; sugAct=-1;
@@ -1628,38 +1677,63 @@ function representant(n){
 /* pourquoi cette personne correspond-elle ? extrait du champ concerné,
    avec sa provenance (« beaux » = filiation du conjoint, correspondance indirecte) */
 function contexteRecherche(n,s){
+  var cles=motsCle(s);
+  /* la correspondance peut se répartir sur plusieurs champs (« Bérénice Ragozin » :
+     le patronyme vient du nom, le prénom du conjoint) — on retient le champ qui
+     porte le plus de mots de la requête, c'est lui qui explique le résultat */
   function extrait(txt,prefixe,src){
-    var p=norm(txt).indexOf(s);
-    if(p<0) return null;
-    var d0=Math.max(0,p-25), f0=Math.min(txt.length,p+s.length+35);
-    return {t:prefixe+(d0>0?'…':'')+txt.slice(d0,f0)+(f0<txt.length?'…':''), src:src};
+    var t=norm(txt), p=-1, nb=0;
+    cles.forEach(function(w){
+      var i=t.indexOf(' '+w);
+      i = i>-1 ? i+1 : (t.indexOf(w)===0 ? 0 : t.indexOf(w));
+      if(i<0) return;
+      nb++;
+      if(p<0||i<p) p=i;
+    });
+    if(!nb) return null;
+    var lg=cles.length?cles[0].length:0;
+    var d0=Math.max(0,p-25), f0=Math.min(txt.length,p+lg+35);
+    return {t:prefixe+(d0>0?'…':'')+txt.slice(d0,f0)+(f0<txt.length?'…':''), src:src, nb:nb};
   }
   var r=null;
+  function retenir(c){ if(c&&(!r||c.nb>r.nb)) r=c }
   (n.u||[]).forEach(function(u){
-    if(r) return;
-    if(u.s) r=extrait(u.s,'⚭ ','conjoint');
-    if(!r&&u.d) r=extrait(u.d,'⚭ ','union');
-    if(!r&&u.a) r=extrait(u.a,'⚭ ','beaux');
+    if(u.s) retenir(extrait(u.s,'⚭ ','conjoint'));
+    if(u.d) retenir(extrait(u.d,'⚭ ','union'));
+    if(u.a) retenir(extrait(u.a,'⚭ ','beaux'));
   });
-  if(!r&&n.d) r=extrait(n.d,'','notice');
+  if(n.d) retenir(extrait(n.d,'','notice'));
   return r;
 }
 function calculerSuggestions(s){
-  var debut=[],dedans=[],maries=[],autres=[];
+  var debut=[],dedans=[],parMots=[],maries=[],autres=[];
+  var cles=motsCle(s), sc=cleRech(s).trim();
   ordre.forEach(function(n){
     n._mar=null; n._ctx=null;
     if(!dansPortee(n)) return;
-    var nn=norm(n.n), p=nn.indexOf(s);
-    if(p===0||(p>0&&nn.charAt(p-1)===' ')){debut.push(n);return}
+    /* saisie contiguë : on garde le classement d'origine (début de mot, puis intérieur) */
+    var p=n.kn.indexOf(sc);
+    if(p>-1&&n.kn.charAt(p-1)===' '){debut.push(n);return}
     if(p>-1){dedans.push(n);return}
+    /* saisie éclatée : « Anne Exupéry » pour « Anne de Saint-Exupéry » */
+    var sn=scoreMots(cles,n.kn);
+    if(sn){n._sc=sn;parMots.push(n);return}
     var e=null;
-    (n.mar||[]).forEach(function(m){ if(!e&&norm(m.nom).indexOf(s)>-1) e=m });
+    (n.mar||[]).forEach(function(m){ if(!e&&scoreMots(cles,m.kn)) e=m });
     if(e){n._mar=e;maries.push(n);return}
-    if(n.k.indexOf(s)>-1){n._ctx=contexteRecherche(n,s);autres.push(n)}
+    if(scoreMots(cles,n.k)){n._ctx=contexteRecherche(n,s);autres.push(n)}
   });
+  /* dans la reconnaissance par mots : d'abord ceux qui ouvrent un mot, puis les noms
+     les plus ajustés à la requête — « Anne Exupéry » vise Anne de Saint-Exupéry
+     avant Marie Anne Marthe de Saint-Exupéry */
+  parMots=parMots.map(function(n,i){
+    return {n:n,i:i,l:n.kn.trim().split(' ').length};
+  }).sort(function(a,b){
+    return (b.n._sc-a.n._sc)||(a.l-b.l)||(a.i-b.i);
+  }).map(function(x){return x.n});
   /* la personne cherchée existe déjà dans les résultats : on écarte les échos
      indirects (« fils de … et … » dans la filiation d'un conjoint) */
-  if(debut.length+dedans.length+maries.length){
+  if(debut.length+dedans.length+parMots.length+maries.length){
     autres=autres.filter(function(n){ return !n._ctx||n._ctx.src!=='beaux' });
   }
   /* les correspondances directes (conjoint, notice) avant les indirectes */
@@ -1670,7 +1744,7 @@ function calculerSuggestions(s){
   }).map(function(x){return x.n});
   /* une seule suggestion par personne réelle (copies multi-bases fusionnées) */
   var vus={}, res=[];
-  debut.concat(dedans,maries,autres).forEach(function(n){
+  debut.concat(dedans,parMots,maries,autres).forEach(function(n){
     var r=representant(n), k=cid(r);
     if(vus[k]) return;
     vus[k]=1;
